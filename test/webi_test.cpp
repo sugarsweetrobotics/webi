@@ -1,14 +1,5 @@
 #include "webi/webi.h"
 
-const char* content = "<HTML>"
-"<HEADER>"
-"<link rel='stylesheet' type='text/css' href='webi.css'>"
-"</HEADER>"
-"<BODY>"
-"Hoooooo Yahhhh"
-"<BODY>"
-"</HTML>";
-
 using namespace webi;
 
 int main(void) {
@@ -17,18 +8,25 @@ int main(void) {
 
   auto s = webi.createServer();
 
-  s->baseDirectory("./www");
-
-  //  s->getHTML("/", content);
+  s->baseDirectory("../www");
 
   s->getHTML("/", HTML(
 		      Header(
 			     WebiScript(), 
 			     StyleSheet("webi.css")),
 		      Body(
-			   Style("font-size: 5pt;"),
-			   Text("Hello World"),
+			   H1(
+			      Text("Hello World")
+			      ),
+			   P(
+			     Classes("content", "content-new"),
+			     Text("This is Test Page of Webi")
+			     ),
 			   Button("Hello"))));
+
+  s->response("/webi_button_0", "POST", "application/json", [](const Request& r) {
+      return Response(200, "Hello:json");
+    });
 
   s->runForever(8080);
   

@@ -7,6 +7,21 @@
 
 using namespace webi;
 
+
+webi::Request convert(const httplib::Request &req)
+{
+  return webi::Request(req.method, req.body, req.matches);
+}
+
+
+void apply(httplib::Response &response, webi::Response &&r)
+{
+  response.status = r.status;
+  response.version = r.version;
+  response.body = r.body;
+}
+
+
 class ServerImpl : public Server{
 private:
   httplib::Server server_;
@@ -20,6 +35,8 @@ public:
   void baseDirectory(const std::string& path) override;
   
   void response(const std::string& path, const std::string& method, const std::string& contentType, const std::string& content) override;
+
+  void response(const std::string& path, const std::string& method, const std::string& contentType, std::function<webi::Response(const webi::Request&)> callback) override;
 
   void runForever(const int32_t port=8080) override;
     
@@ -51,6 +68,15 @@ void ServerImpl::response(const std::string& path, const std::string& method, co
 	res.status = 200;
       });
   }
+}
+
+void ServerImpl::response(const std::string& path, const std::string& method, const std::string& contentType, std::function<webi::Response(const webi::Request&)> callback) {
+  if (method == "POST") {
+    server_.Post(path.c_str(), [callback, contentType](const httplib::Request& req, httplib::Response& res) {
+	apply(res, callback(convert(req)));
+      });
+  }
+
 }
 
 void ServerImpl::runForever(const int32_t port /*=8080*/) {

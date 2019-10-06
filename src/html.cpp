@@ -1,10 +1,6 @@
 #include "webi/html.h"
 
-
-
-
 using namespace webi;
-
 
 Attribute::Attribute(const std::string& key, const std::string& value): key_(key), value_(value) {
 }
@@ -40,8 +36,6 @@ std::string Tag::toString() const {
   buf += "</" + name_ + ">";
   return buf;
 }
-
-
 
 Text::Text(const std::string& value): Tag("") { value_ = value; }
 
