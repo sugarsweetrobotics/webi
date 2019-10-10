@@ -1,4 +1,5 @@
-set(webi_srcs webi.cpp server.cpp html.cpp)
+#set(webi_srcs webi.cpp server.cpp html.cpp)
+set(webi_srcs webi.cpp server_lws.cpp html.cpp)
 set(webi_srcs ${webi_srcs} PARENT_SCOPE)
 
 include_directories(${CMAKE_SOURCE_DIR}/thirdparty/)

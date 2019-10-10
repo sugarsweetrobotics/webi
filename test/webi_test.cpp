@@ -24,8 +24,11 @@ int main(void) {
 			     ),
 			   Button("Hello"))));
 
+  s->response("/webi_button_0", "PUT", "application/json", [](const Request& r) {
+      return Response(200, "{Hello:json}");
+    });
   s->response("/webi_button_0", "POST", "application/json", [](const Request& r) {
-      return Response(200, "Hello:json");
+      return Response(200, "{Hello:json}");
     });
 
   s->runForever(8080);
