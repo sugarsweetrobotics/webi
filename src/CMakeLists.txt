@@ -4,6 +4,7 @@ set(webi_srcs ${webi_srcs} PARENT_SCOPE)
 
 include_directories(${CMAKE_SOURCE_DIR}/thirdparty/)
 include_directories(${CMAKE_SOURCE_DIR}/thirdparty/rapidjson/include)
+include_directories(${CMAKE_SOURCE_DIR}/thirdparty/libwebsockets/include)
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
 find_package(Threads REQUIRED)

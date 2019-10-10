@@ -7,6 +7,6 @@
 [submodule "test/Catch2"]
 	path = test/Catch2
 	url = https://github.com/catchorg/Catch2
-[submodule "thirdparty/libwebsockets"]
-	path = thirdparty/libwebsockets
+[submodule "libwebsockets"]
+	path = libwebsockets
 	url = https://libwebsockets.org/repo/libwebsockets
