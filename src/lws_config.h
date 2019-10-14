@@ -6,7 +6,7 @@
 	#endif
 #endif
 
-#define LWS_INSTALL_DATADIR "/usr/local/share"
+#define LWS_INSTALL_DATADIR "C:/Program Files/webi/share"
 #define LWS_LIBRARY_VERSION_MAJOR 3
 #define LWS_LIBRARY_VERSION_MINOR 2
 #define LWS_LIBRARY_VERSION_PATCH 99
@@ -17,19 +17,19 @@
 #define LWS_MAX_SMP 1
 
 /* #undef LWS_AVOID_SIGPIPE_IGN */
-#define LWS_BUILD_HASH "v3.1.0-349-g3c93259a"
-/* #undef LWS_BUILTIN_GETIFADDRS */
+#define LWS_BUILD_HASH "v3.1.0-353-g65e16f9"
+#define LWS_BUILTIN_GETIFADDRS
 #define LWS_CLIENT_HTTP_PROXYING
 /* #undef LWS_FALLBACK_GETHOSTBYNAME */
 #define LWS_HAS_INTPTR_T
-#define LWS_HAS_GETOPT_LONG
-/* #undef LWS_HAVE__ATOI64 */
+/* #undef LWS_HAS_GETOPT_LONG */
+#define LWS_HAVE__ATOI64
 #define LWS_HAVE_ATOLL
-/* #undef LWS_HAVE_BN_bn2binpad */
-#define LWS_HAVE_CLOCK_GETTIME
+#define LWS_HAVE_BN_bn2binpad
+/* #undef LWS_HAVE_CLOCK_GETTIME */
 /* #undef LWS_HAVE_EC_POINT_get_affine_coordinates */
-/* #undef LWS_HAVE_ECDSA_SIG_set0 */
-/* #undef LWS_HAVE_EVP_MD_CTX_free */
+#define LWS_HAVE_ECDSA_SIG_set0
+#define LWS_HAVE_EVP_MD_CTX_free
 #define LWS_HAVE_EVP_aes_128_wrap
 #define LWS_HAVE_EVP_aes_128_cfb8
 #define LWS_HAVE_EVP_aes_128_cfb128
@@ -39,8 +39,8 @@
 #define LWS_HAVE_EVP_aes_256_cfb128
 #define LWS_HAVE_EVP_aes_128_xts
 /* #undef LWS_HAVE_LIBCAP */
-/* #undef LWS_HAVE_HMAC_CTX_new */
-/* #undef LWS_HAVE_MALLOC_H */
+#define LWS_HAVE_HMAC_CTX_new
+#define LWS_HAVE_MALLOC_H
 /* #undef LWS_HAVE_MALLOC_TRIM */
 /* #undef LWS_HAVE_MALLOC_USABLE_SIZE */
 /* #undef LWS_HAVE_mbedtls_net_init */
@@ -53,8 +53,8 @@
 /* #undef LWS_HAVE_NEW_UV_VERSION_H */
 #define LWS_HAVE_OPENSSL_ECDH_H
 /* #undef LWS_HAVE_PIPE2 */
-#define LWS_HAVE_PTHREAD_H
-/* #undef LWS_HAVE_RSA_SET0_KEY */
+/* #undef LWS_HAVE_PTHREAD_H */
+#define LWS_HAVE_RSA_SET0_KEY
 /* #undef LWS_HAVE_RSA_verify_pss_mgf1 */
 #define LWS_HAVE_SSL_CTX_get0_certificate
 #define LWS_HAVE_SSL_CTX_set1_param
@@ -64,13 +64,13 @@
 /* #undef LWS_HAVE_SSL_CTX_EVP_PKEY_new_raw_private_key */
 #define LWS_HAVE_SSL_set_alpn_protos
 #define LWS_HAVE_SSL_SET_INFO_CALLBACK
-/* #undef LWS_HAVE__STAT32I64 */
+#define LWS_HAVE__STAT32I64
 #define LWS_HAVE_STDINT_H
 /* #undef LWS_HAVE_SYS_CAPABILITY_H */
-/* #undef LWS_HAVE_TLS_CLIENT_METHOD */
+#define LWS_HAVE_TLS_CLIENT_METHOD
 #define LWS_HAVE_TLSV1_2_CLIENT_METHOD
 /* #undef LWS_HAVE_UV_VERSION_H */
-/* #undef LWS_HAVE_X509_get_key_usage */
+#define LWS_HAVE_X509_get_key_usage
 #define LWS_HAVE_X509_VERIFY_PARAM_set1_host
 #define LWS_LIBRARY_VERSION "3.2.99"
 /* #undef LWS_MINGW_SUPPORT */
@@ -79,7 +79,7 @@
 #define LWS_OPENSSL_CLIENT_CERTS "../share"
 #define LWS_OPENSSL_SUPPORT
 /* #undef LWS_PLAT_OPTEE */
-#define LWS_PLAT_UNIX
+/* #undef LWS_PLAT_UNIX */
 /* #undef LWS_PLAT_FREERTOS */
 /* #undef LWS_ROLE_CGI */
 /* #undef LWS_ROLE_DBUS */
@@ -100,7 +100,7 @@
 #define LWS_WITH_CUSTOM_HEADERS
 /* #undef LWS_WITH_DEPRECATED_LWS_DLL */
 /* #undef LWS_WITH_DETAILED_LATENCY */
-#define LWS_WITH_DIR
+/* #undef LWS_WITH_DIR */
 /* #undef LWS_WITH_ESP32 */
 /* #undef LWS_WITH_EXTERNAL_POLL */
 #define LWS_WITH_FILE_OPS

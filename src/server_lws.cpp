@@ -1,11 +1,16 @@
 #include <iostream>
 
+
+extern "C" {
+#include <libwebsockets.h>
+};
+
+
 #include "webi/server.h"
 
 
 #include "webi/webi.h"
 
-#include <libwebsockets.h>
 using namespace webi;
 
 
@@ -354,7 +359,7 @@ void ServerImpl::runForever(const int32_t port /*=8080*/) {
   }
   pprotocols[mountInfos_.size()] = NULL;
   
-  signal(SIGINT, _sigint_handler);
+ // signal(SIGINT, _sigint_handler);
 
   memset(&info_, 0, sizeof info_); /* otherwise uninitialized garbage */
   info_.port = port;
@@ -410,6 +415,7 @@ void ServerImpl::terminateBackground() {
 Server_ptr Webi::createServer() {
   return std::make_shared<ServerImpl>();
 }
+
 
 
 

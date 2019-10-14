@@ -1,5 +1,5 @@
 #set(webi_srcs webi.cpp server.cpp html.cpp)
-set(webi_srcs webi.cpp server_lws.cpp html.cpp)
+set(webi_srcs webi.cpp server_lws.cpp html.cpp server_lws_wrapper.c)
 set(webi_srcs ${webi_srcs} PARENT_SCOPE)
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
@@ -18,7 +18,14 @@ set(EXT_LIBS websockets_shared)
 
 message("EXT_LIBS: ${EXT_LIBS}")
 
-add_compile_options(-std=gnu++14)
+
+# add_compile_options(/D _CRT_SECURE_NO_DEPRECATE)
+# _CRT_NONSTDC_NO_DEPRECATE
+
+#add_compile_options(-std=gnu++14)
+set(CMAKE_CXX_STANDARD 17)
+
+
 add_library(webi ${webi_srcs})
 target_link_libraries(webi Threads::Threads ${EXT_LIBS})
 add_dependencies(webi websockets_shared)

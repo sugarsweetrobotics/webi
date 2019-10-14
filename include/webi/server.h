@@ -2,6 +2,8 @@
 
 #include <cstdint>
 #include <string>
+#include <functional>
+#include <memory>
 
 #include "html.h"
 #include "response.h"

@@ -1,4 +1,5 @@
 #include "webi/webi.h"
+#include "webi_test.h"
 
 using namespace webi;
 
