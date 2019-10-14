@@ -116,24 +116,20 @@ public:
 
 static int st = 6;
 
-class MountInfo {
-private:
+struct MountInfo {
   std::string method_;
   std::string origin_;
-public:
   lws_http_mount mount;
   int id;
-private:
   std::function<int(const Request& req, Response& res)> cb_;
-public:
   lws_protocols protocol;
 
 
 public:
   int callback(const Request& req, Response& res) {
-    std::cout << "hooo" << std::endl;
-    //    return cb_(req, res);
-    return 0;
+    std::cout << "MountInfo(" << id << ").callback()" << std::endl;
+    return cb_(req, res);
+	    //return 0;
   }
 
   
@@ -157,22 +153,48 @@ public:
     protocol.user = (void*)this;
     protocol.tx_packet_size = 0;
     mount.origin = origin_.c_str();
+    //    cb_ = [](const Request& req, Response& res) { 
+    //      std::cout << "hooooooooo" << std::endl;
+    //      return 0;
+    //    };
   }
   
   ~MountInfo() {}
 
 
-  MountInfo(const MountInfo&& mi) : method_(mi.method_),
+  MountInfo(const MountInfo& mi) : method_(mi.method_),
 				    origin_(mi.origin_),
 				    mount(mi.mount),
 				    cb_(mi.cb_),
 				    protocol(mi.protocol) {
     this->id = -6;
+    //    cb_ = [](const Request& req, Response& res) { 
+    //      std::cout << "fooooooooo" << std::endl;
+    //      return 0;
+    //    };
+    std::cout << "copycon" << std::endl;
+    protocol.user = (void*)this;
+  }
+
+  MountInfo& operator=(const MountInfo& mi) {
+    std::cout << "operator=" << std::endl;
+    this->id = mi.id;
+    //    cb_ = [](const Request& req, Response& res) { 
+    //      std::cout << "fooooooooo" << std::endl;
+    //      return 0;
+    //    };
+        this->cb_ = mi.cb_;
     protocol.user = (void*)this;
   }
 
 };
 
+
+
+std::function<int(const Request& req, Response& res)> f = [](const Request& req, Response& res) {
+  std::cout << "hogehoge" << std::endl;;
+  return -1;
+};
 
 //static MountInfo mi("/", "hoge", 0, [](const Request& req, Response& res) {
 //    std::cout << "Callback" << std::endl;
@@ -184,13 +206,13 @@ static int _callback_dynamic_http(struct lws *wsi, enum lws_callback_reasons rea
     uint8_t buf[LWS_PRE + 2048], *start = &buf[LWS_PRE], *p = start,
       *end = &buf[sizeof(buf) - LWS_PRE - 1];
 
-
-    //  MountInfo& info = *(MountInfo*)user;
+    std::cout << "_callback_dynamic_http" << std::endl;
   Request req("GET", "body");
   Response res;
-  //info.callback(req, res);
+  //  ((MountInfo*)lws_wsi_user(wsi))->callback(req, res);
+					    //info.callback(req, res);
 
-  std::cout << "callback(" << reason << std::endl;
+  std::cout << "callback(reason=" << reason << ")" << std::endl;
   switch (reason) {
   case LWS_CALLBACK_HTTP: {
     std::cout << "hogeeee" << std::endl;
@@ -203,11 +225,12 @@ static int _callback_dynamic_http(struct lws *wsi, enum lws_callback_reasons rea
   std::cout << "URI = " << puri << std::endl;
 
 
-  MountInfo& info = *(MountInfo*)(lws_wsi_user(wsi));
+  //    MountInfo& info = *(MountInfo*)(lws_wsi_user(wsi));
 
+  ((MountInfo*)lws_wsi_user(wsi))->callback(req, res);
 
-    Request req("GET", "body");
-    Response res;
+  //    Request req("GET", "body");
+  //    Response res;
     //const char* buf = "Hello LWS";
     //uint8_t* p = (uint8_t*)buf;
     //uint8_t* end = p + 8;
@@ -217,10 +240,10 @@ static int _callback_dynamic_http(struct lws *wsi, enum lws_callback_reasons rea
     char* universal_response = b;
     
 
-    info.callback(req, res);
+    //    info.callback(req, res);
     ///std::cout << "info_data:" << *(int*)user << std::endl;
     //    *(int*)user = 6;
-    std::cout << "info:" << info.id << std::endl;
+    //    std::cout << "info:" << info.id << std::endl;
     if (lws_add_http_common_headers(wsi, HTTP_STATUS_OK,
 				    "text/html",
 				    LWS_ILLEGAL_HTTP_CONTENT_LEN, /* no content len */
@@ -258,9 +281,9 @@ static int _callback_dynamic_http(struct lws *wsi, enum lws_callback_reasons rea
   case LWS_CALLBACK_HTTP_WRITEABLE: {
     std::cout << "Writeable" << std::endl;
     static const char* buf = "Hello LWS";
-
-    MountInfo& info = *(MountInfo*)user;
-    std::cout << "info_value:" << *(int*)user << std::endl;
+  MountInfo& info = *(MountInfo*)(lws_wsi_user(wsi));
+  //    MountInfo& info = *(MountInfo*)user;
+  //    std::cout << "info_value:" << *(int*)user << std::endl;
     //    static uint8_t* p = (uint8_t*)buf;
     for(int i = 0;i < 9;i++) {
       p[i] = buf[i];
@@ -317,11 +340,13 @@ void ServerImpl::baseDirectory(const std::string& path) {
 
 void ServerImpl::response(const std::string& path, const std::string& method, const std::string& contentType, const std::string& response) {
   if (method == "GET") {
-    mountInfos_.emplace_back(MountInfo(path, method, 0, [response](const Request& req, Response& res) {
+    /*    mountInfos_.emplace_back(MountInfo(path, method, 0, [response](const Request& req, Response& res) {
+	  std::cout << "cb_" << std::endl;
 	  res.status = 200;
 	  res.body = response;
 	  return 0;
-	}));
+	  }));*/
+    mountInfos_.emplace_back(MountInfo(path, method, 0, f));
   }
 }
 
@@ -332,6 +357,7 @@ void ServerImpl::response(const std::string& path, const std::string& method, co
   }
   else if (method == "GET") {
     mountInfos_.emplace_back(MountInfo(path, method, 0, [callback](const Request& req, Response& res) {
+	  std::cout << "cb2" << std::endl;
 	  res = callback(req);
 	  return 0;
 	}));
@@ -348,23 +374,32 @@ static void _sigint_handler(int sig)
 void ServerImpl::runForever(const int32_t port /*=8080*/) {
 
 
+    Request req("GET", "body");
+    Response res;
+
   struct lws_protocols** pprotocols = new lws_protocols*[mountInfos_.size()+1]; 
   for(int i = 0;i < mountInfos_.size();i++) {
+    mountInfos_[i].callback(req,res);
+    ((MountInfo*)mountInfos_[i].protocol.user)->callback(req, res);
     pprotocols[i] = &(mountInfos_[i].protocol);
   }
   pprotocols[mountInfos_.size()] = NULL;
   
   signal(SIGINT, _sigint_handler);
 
-  memset(&info_, 0, sizeof info_); /* otherwise uninitialized garbage */
+  memset(&info_, 0, sizeof(info_)); /* otherwise uninitialized garbage */
   info_.port = port;
     info_.mounts = &mount_;
     info_.pprotocols = (const lws_protocols**)pprotocols;
+    info_.user = (void*)(&(mountInfos_[0]));
+    ((MountInfo*)info_.user)->callback(req, res);
 
   info_.options = 0;//  LWS_SERVER_OPTION_EXPLICIT_VHOSTS | 
   //LWS_SERVER_OPTION_HTTP_HEADERS_SECURITY_BEST_PRACTICES_ENFORCE;
   
   context_ = lws_create_context(&info_);
+  ((MountInfo*)lws_context_user(context_))->callback(req, res);
+    //  ((MountInfo*)context_->user_space)->callbacK(req, res);
   if (!context_) {
     lwsl_err("lws init failed\n");
     return;
