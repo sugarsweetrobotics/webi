@@ -19,8 +19,11 @@ set(EXT_LIBS websockets_shared)
 message("EXT_LIBS: ${EXT_LIBS}")
 
 
+if(MSVC)
+add_compile_options(/D _USRDLL)
 # add_compile_options(/D _CRT_SECURE_NO_DEPRECATE)
 # _CRT_NONSTDC_NO_DEPRECATE
+endif(MSVC)
 
 #add_compile_options(-std=gnu++14)
 set(CMAKE_CXX_STANDARD 17)

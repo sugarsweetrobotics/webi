@@ -63,9 +63,6 @@ static const struct lws_http_mount _default_mount = {
   /* .basic_auth_login_file */NULL,
 };
 
-
-
-
 static int _callback_dynamic_http(struct lws *wsi, enum lws_callback_reasons reason, void *user, void *in, size_t len);
 
 

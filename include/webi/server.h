@@ -5,11 +5,13 @@
 #include <functional>
 #include <memory>
 
+#include "webi/webi_common.h"
+
 #include "html.h"
 #include "response.h"
 
 namespace webi {
-  class Server {
+  class WEBI_API Server {
     
   public:
     Server() {}
@@ -33,6 +35,7 @@ namespace webi {
       getHTML(path, tag.toString());
 
     }
+
     void getHTML(const std::string& path, const std::string& content) {
       response(path, "GET", "text/html", content);
     }
