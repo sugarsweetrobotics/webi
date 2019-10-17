@@ -14,6 +14,11 @@ namespace webi {
     std::string target_id;
     std::string name;
     std::string type;
+
+    ActionEvent(const std::string& target_id,
+		const std::string& name,
+		const std::string& type)
+    : target_id(target_id), name(name), type(type) {}
   };
 
   using EventCallback = std::function<void(const ActionEvent&)>;

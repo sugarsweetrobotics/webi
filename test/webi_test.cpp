@@ -10,7 +10,6 @@ int main(void) {
 
 
   auto s = webi.createServer();
-  auto ws = webi.createWebSocketServer();
 
   s->baseDirectory("../www");
 
@@ -32,22 +31,11 @@ int main(void) {
 			)
 		   )
 	 );
-  
-  s->response("/webi_button_0", "PUT", "application/json", [](const Request& r) {
-      return Response(200, "{Hello:json}");
-    });
-  s->response("/webi_button_0", "POST", "application/json", [](const Request& r) {
-      return Response(200, "{Hello:json}");
-    });
 
-  //s->runForever(8080);
 
   std::cout << "Server is started." << std::endl;
   
-  ws->runBackground(8081);
-
-  s->runBackground(8080);
-  //  s->runForever(8088);
+  s->runBackground(8080, 8081);
 
   if (s->waitBackground()) { // wait forever.) 
     std::cout << "Background Server is ended." << std::endl;

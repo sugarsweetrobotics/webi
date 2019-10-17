@@ -9,6 +9,8 @@
 
 #include "html.h"
 #include "response.h"
+#include "http_server.h"
+#include "websocket_server.h"
 
 namespace webi {
 
@@ -25,54 +27,59 @@ namespace webi {
 
     friend class Webi;
 
+    HttpServer_ptr http_server_;
+    WebSocketServer_ptr websock_server_;
   public:
-    Server() {}
-
-    Server(Server&& s) {}
+  Server(HttpServer_ptr http_server, WebSocketServer_ptr websock_server) : http_server_(http_server), websock_server_(websock_server) {}
 
     virtual ~Server() {}
     
-    virtual void baseDirectory(const std::string& path) = 0;
+    virtual void baseDirectory(const std::string& path) {
+      http_server_->baseDirectory(path);
+    }
     
     virtual void response(const std::string& path, const std::string& method, const std::string& contentType, const std::string& content) {
-      response(path, method, contentType, [content, contentType](const webi::Request& req) {
-	webi::Response response(200, content);
-	return response;
-      });
+      http_server_->response(path, method, contentType, content);
     }
 
-    virtual void response(const std::string& path, const std::string& method, const std::string& contentType, std::function<webi::Response(const webi::Request&)> callback) = 0;
+    virtual void response(const std::string& path, const std::string& method, const std::string& contentType, std::function<webi::Response(const webi::Request&)> callback) {
+      http_server_->response(path, method, contentType, callback);
+    }
     
-    void get(const std::string& path, const Tag& tag);
-
-    void responseHTML(const std::string& path, const std::string& method, const std::string& content) {
-      response(path, method, "text/html", content);
-    }
-
-    void getHTML(const std::string& path, const std::string& content) {
-      response(path, "GET", "text/html", content);
+    void get(const std::string& path, const Tag& tag) {
+      http_server_->get(path, tag);
     }
 
     /**
      * Run Server on Current Thread. This function blocks until signal is raised..
      */
-    virtual void runForever(const int32_t port=8080) = 0;
+    virtual void runForever(const int32_t port=8080, const int32_t websock_port=8081) {
+      websock_server_->runBackground();
+      http_server_->runForever(port);
+    }
     
     /**
      * Run Server on Background Thread.
      * @see waitBackground
      * @see terminateBackground
      */
-    virtual void runBackground(const int32_t port=8080) = 0;
+    virtual void runBackground(const int32_t port=8080, const int32_t websock_port=8081) {
+      http_server_->runBackground(port);
+      websock_server_->runBackground(websock_port);
+    }
 
     /**
      *
      * @param timeout_sec Timeout Interval. Forever if negative.
      * @return Server is ended if true. Timeout if false.
      */
-    virtual bool waitBackground(const double timeout_sec=-1) = 0; 
+    virtual bool waitBackground(const double timeout_sec=-1) {
+      return http_server_->waitBackground(timeout_sec);
+    }
 
-    virtual void terminateBackground() = 0;
+    virtual void terminateBackground() {
+      return http_server_->terminateBackground();
+    }
   };
 
   using Server_ptr = std::shared_ptr<Server>;

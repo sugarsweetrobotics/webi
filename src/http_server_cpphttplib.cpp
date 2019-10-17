@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "webi/server.h"
+#include "webi/http_server.h"
 
 #include "cpp-httplib/httplib.h"
 
@@ -20,11 +20,13 @@ static void apply(httplib::Response &response, webi::Response &&r)
 {
   response.status = r.status;
   response.version = r.version;
-  response.body = r.body;
+  
+  response.set_content(r.body, r.contentType.c_str());
+    //  response.body = r.body;
 }
 
 
-class ServerImpl : public Server{
+class ServerImpl : public HttpServer{
 private:
   httplib::Server server_;
   std::unique_ptr<std::thread> thread_;
@@ -136,7 +138,7 @@ void ServerImpl::terminateBackground() {
   
 }
 
-Server_ptr Webi::createServerImpl() {
+HttpServer_ptr Webi::createHttpServerImpl() {
   return std::make_shared<ServerImpl>();
 }
 

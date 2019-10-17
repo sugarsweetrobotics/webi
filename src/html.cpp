@@ -62,5 +62,5 @@ std::string webi::WebiScript::generateWebiScript() {
 }
 
 std::string webi::Button::generateOnClickedFunction(const Button* button) {
-  return "webi_on_button(" + button->getID() + ");";
+  return "webi_on_button('" + button->getID() + "');";
 }
