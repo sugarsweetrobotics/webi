@@ -2,12 +2,32 @@
 
 #include <string>
 #include <vector>
+#include <map>
+
+#include <optional>
+
+#include "webi/webi_common.h"
 
 namespace webi {
+
+  struct ActionEvent {
+    std::string target_id;
+    std::string name;
+    std::string type;
+  };
+
+  using EventCallback = std::function<void(const ActionEvent&)>;
+
   class Attribute {
+
   private:
     std::string key_;
     std::string value_;
+
+  public:
+    std::string getKey() const { return key_; }
+    std::string getValue() const { return value_; }
+
   public:
     Attribute(const std::string& key, const std::string& value);
     virtual ~Attribute();
@@ -16,13 +36,46 @@ namespace webi {
 
   using AttributeSet = std::vector<Attribute>;
 
+
+  class Server;
+
   class Tag {
+  protected:
+    std::map<std::string, EventCallback> eventListeners_;
   protected:
     std::string name_;
     std::string value_;
     AttributeSet attrs_;
+
   public:
     std::vector<Tag> children;
+
+  public:
+    std::string name() const { return name_; }
+
+    std::optional<EventCallback> eventListener(const std::string& key) const {
+      auto i  = eventListeners_.find(key);
+      if (i == eventListeners_.end()) {
+	return std::nullopt;
+      }
+
+      return i->second;
+    }
+
+    std::string attribute(const std::string& key) const {
+      for(auto a : attrs_) {
+	if (a.getKey() == key) return a.getValue();
+      }
+      return "";
+    }
+
+    bool hasAttribute(const std::string& key) const {
+      for(auto a : attrs_) {
+	if (a.getKey() == key) return true;
+      }
+
+      return false;
+    }
 
   public:
     Tag(const std::string& name);
@@ -61,6 +114,11 @@ namespace webi {
     }
 
     virtual std::string toString() const;
+
+  private:
+    void addAttribute(const Attribute& att) {
+      attrs_.push_back(att);
+    }
   };
 
   class Text : public Tag {
@@ -68,5 +126,7 @@ namespace webi {
     Text(const std::string& value);
     virtual ~Text();
   };
+
+
 
 };

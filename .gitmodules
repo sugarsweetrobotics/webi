@@ -10,3 +10,9 @@
 [submodule "libwebsockets"]
 	path = thirdparty/libwebsockets
 	url = https://github.com/warmcat/libwebsockets
+[submodule "thirdparty/websocketpp"]
+	path = thirdparty/websocketpp
+	url = https://github.com/zaphoyd/websocketpp
+[submodule "thirdparty/IXWebSocket"]
+	path = thirdparty/IXWebSocket
+	url = https://github.com/machinezone/IXWebSocket

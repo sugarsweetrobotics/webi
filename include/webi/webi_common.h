@@ -17,3 +17,12 @@
 #else 
 #define WEBI_API                       // Linux—p
 #endif
+
+#include <memory>
+
+namespace webi {
+  
+  class Webi;
+  using Webi_ptr = Webi*;
+
+};

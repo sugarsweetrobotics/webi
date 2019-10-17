@@ -125,10 +125,16 @@ namespace webi {
    */
   class Button : public Tag {
   private:
-    
+    std::string id_;
+
   public:
-    Button(const std::string& caption);
+    std::string getID() const { return id_; }
+  public:
+    Button(const std::string& caption, const ID& id, EventCallback callback);
     virtual ~Button();
+
+  public:
+    virtual std::string toString() const override;
 
   public:
     static std::string generateOnClickedFunction(const Button* button);

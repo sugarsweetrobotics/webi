@@ -42,17 +42,25 @@ Text::Text(const std::string& value): Tag("") { value_ = value; }
 Text::~Text() {}
 
 
-Button::Button(const std::string& caption):Tag("input", Attribute("type", "button"), 
-					       Attribute("value", caption)) { 
+
+Button::Button(const std::string& caption, const ID& id, EventCallback callback) :
+  Tag("input", id, Attribute("type", "button"), Attribute("value", caption)),
+  id_(id.getValue())
+{ 
   attrs_.push_back(Attribute("onclick", Button::generateOnClickedFunction(this)));
+  eventListeners_.emplace("onclick", callback);
 }
 
 Button::~Button() {}
+
+std::string Button::toString() const {
+  return Tag::toString();
+}
 
 std::string webi::WebiScript::generateWebiScript() {
   return "function webi_on_button(e) { alert('Hello Webi'); };";
 }
 
 std::string webi::Button::generateOnClickedFunction(const Button* button) {
-  return "webi_on_button(null);";
+  return "webi_on_button(" + button->getID() + ");";
 }
