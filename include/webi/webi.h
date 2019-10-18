@@ -8,6 +8,8 @@
 #include "client.h"
 #include "websocket_server.h"
 #include "html.h"
+#include "css.h"
+#include "remote_dom.h"
 
 namespace webi {
 
@@ -29,6 +31,8 @@ namespace webi {
     std::string type;
     EventCallback callback;
   };
+
+  class Document;
   
   class Webi {
   private:
@@ -39,7 +43,6 @@ namespace webi {
 
   public:
     Server_ptr createServer();
-
   private:
     
     HttpServer_ptr createHttpServer();
@@ -55,6 +58,8 @@ namespace webi {
   private:
     void parseImpl(const Tag& tag);
     
+
+  public:
   };
 
 };

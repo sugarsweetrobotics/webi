@@ -39,6 +39,8 @@ namespace webi {
 
     virtual void setOnMessageCallback(std::function<bool(const WebSocketMessage&)> callback) = 0;
 
+    virtual void send(const std::string& msg) = 0;
+
     virtual void runForever(const int32_t port=8081) = 0;
     
     virtual void runBackground(const int32_t port=8081) = 0;

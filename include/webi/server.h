@@ -13,7 +13,8 @@
 #include "websocket_server.h"
 
 namespace webi {
-
+  
+  class Document;
 
   class WEBI_API Server {
   private:
@@ -80,6 +81,14 @@ namespace webi {
     virtual void terminateBackground() {
       return http_server_->terminateBackground();
     }
+
+    webi::Document createDocument();
+
+    void elementCommandById(const std::string& id, 
+			    const std::string& direction,
+			    const std::string& command,
+			    const std::string& arg);
+
   };
 
   using Server_ptr = std::shared_ptr<Server>;

@@ -29,6 +29,7 @@ public:
     cb_on_message_ = callback;
   }
 
+  virtual void send(const std::string& msg) override;
 
   virtual void runForever(const int32_t port=8081) override;
 
@@ -128,6 +129,7 @@ void WebSocketServerImpl::runBackground(const int32_t port) {
 	      // Second parameter tells whether we are sending the message in binary or text mode.
 	      // Here we send it in the same mode as it was received.
 	    //webSocket->send(msg->str, msg->binary);
+	    std::cout << msg->str << std::endl;
 	    this->cb_on_message_({msg->str});
 	  }
 	});
@@ -159,6 +161,15 @@ void WebSocketServerImpl::terminateBackground() {
 
 }
 
+void WebSocketServerImpl::send(const std::string& msg) {
+  auto clients = server_->getClients();
+  for(auto client : clients) {
+    //    if (client->isConnected()) {
+      client->send(msg);
+      //}
+  }
+  
+}
 
 WebSocketServer_ptr Webi::createWebSocketServerImpl() {
   return std::make_shared<WebSocketServerImpl>();

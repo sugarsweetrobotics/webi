@@ -60,6 +60,14 @@ namespace webi {
     virtual ~H1() {}
   };
 
+  class DIV : public Tag {
+  public:
+  DIV(): Tag("DIV") {}
+    template<typename T, typename...R>
+      DIV(const T& t, R... r): Tag("DIV", t, r...) {}
+    virtual ~DIV() {}
+  };
+
   /**
    *
    */
@@ -131,6 +139,8 @@ namespace webi {
     std::string getID() const { return id_; }
   public:
     Button(const std::string& caption, const ID& id, EventCallback callback);
+    
+    Button(const std::string& caption, const ID& id, const Attribute& style, EventCallback callback);
     virtual ~Button();
 
   public:
@@ -155,5 +165,11 @@ namespace webi {
     static std::string generateWebiScript();
   };
 
+
+  class WebiToolbar : public Tag {
+  public:
+    WebiToolbar();
+    virtual ~WebiToolbar() {}
+  };
 
 };

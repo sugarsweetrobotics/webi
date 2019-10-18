@@ -1,0 +1,33 @@
+
+
+body {
+     margin: 0;
+     padding: 0;
+}
+
+
+#webi-toolbar-box {
+  height: 20pt;
+  background-color:#ffe082;
+}
+
+#webi-toolbar-msg {
+  margin-left: 10pt;
+  float: left;
+}
+
+#webi-toolbar-status {
+  text-align: right;
+  margin-right: 10pt;
+}
+
+#webi-toolbar-status-on {
+  display: none;
+  color: green;
+  margin: 0pt;
+}
+
+#webi-toolbar-status-off {
+  color: red;
+  margin: 0pt;
+}

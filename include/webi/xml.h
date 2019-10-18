@@ -33,10 +33,17 @@ namespace webi {
     std::string getKey() const { return key_; }
     std::string getValue() const { return value_; }
 
+    void setValue(const std::string& value) { value_ = value; }
   public:
     Attribute(const std::string& key, const std::string& value);
     virtual ~Attribute();
     std::string toString() const;
+
+
+  public:
+    bool operator==(const Attribute& a) const {
+      return (key_ == a.key_ && value_ == a.value_);
+    }
   };
 
   using AttributeSet = std::vector<Attribute>;
