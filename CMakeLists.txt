@@ -10,6 +10,7 @@ project(webi LANGUAGES CXX VERSION 0.0.1)
 # add_subdirectory(thirdparty/websocketpp)
 add_subdirectory(thirdparty/IXWebsocket)
 
+add_subdirectory(include)
 add_subdirectory(src)
 # add_subdirectory(example)
 

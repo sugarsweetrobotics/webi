@@ -1,6 +1,7 @@
 set(webi_srcs webi.cpp server.cpp http_server.cpp http_server_cpphttplib.cpp 
 	      html.cpp websocket_server_ixwebsocket.cpp css.cpp
-	      remote_dom.cpp
+	      remote_dom.cpp 
+		${headers}
 	      )
 #set(webi_srcs webi.cpp server_lws.cpp html.cpp server_lws_wrapper.c)
 set(webi_srcs ${webi_srcs} PARENT_SCOPE)
