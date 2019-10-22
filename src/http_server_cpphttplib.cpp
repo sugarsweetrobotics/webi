@@ -26,15 +26,15 @@ static void apply(httplib::Response &response, webi::Response &&r)
 }
 
 
-class ServerImpl : public HttpServer{
+class HttpServerImpl : public HttpServer{
 private:
   httplib::Server server_;
   std::unique_ptr<std::thread> thread_;
 public:
-  ServerImpl();
-  virtual ~ServerImpl();
+  HttpServerImpl();
+  virtual ~HttpServerImpl();
 
-  ServerImpl(ServerImpl&& server);
+  HttpServerImpl(HttpServerImpl&& server);
 
   void baseDirectory(const std::string& path) override;
   
@@ -50,22 +50,22 @@ public:
 };
 
 
-ServerImpl::ServerImpl() {
+HttpServerImpl::HttpServerImpl() {
 }
 
-ServerImpl::ServerImpl(ServerImpl&& server) {
+HttpServerImpl::HttpServerImpl(HttpServerImpl&& server) {
 }
 
-ServerImpl::~ServerImpl() {
+HttpServerImpl::~HttpServerImpl() {
 
 }
 
-void ServerImpl::baseDirectory(const std::string& path) {
+void HttpServerImpl::baseDirectory(const std::string& path) {
   server_.set_base_dir(path.c_str());
 
 }
 
-void ServerImpl::response(const std::string& path, const std::string& method, const std::string& contentType, std::function<webi::Response(const webi::Request&)> callback) {
+void HttpServerImpl::response(const std::string& path, const std::string& method, const std::string& contentType, std::function<webi::Response(const webi::Request&)> callback) {
   if (method == "GET") {
     server_.Get(path.c_str(), [callback, contentType](const httplib::Request& req, httplib::Response& res) {
 	std::cout << "get response" << std::endl;
@@ -87,11 +87,11 @@ void ServerImpl::response(const std::string& path, const std::string& method, co
 
 }
 
-void ServerImpl::runForever(const int32_t port /*=8080*/) {
+void HttpServerImpl::runForever(const int32_t port /*=8080*/) {
   server_.listen("localhost", port);
 }
 
-void ServerImpl::runBackground(const int32_t port /*=8080*/) {
+void HttpServerImpl::runBackground(const int32_t port /*=8080*/) {
   std::string address = "localhost";
   const double timeout = 10.0;
   auto _port = port;
@@ -117,7 +117,7 @@ void ServerImpl::runBackground(const int32_t port /*=8080*/) {
       }));
 }
 
-bool ServerImpl::waitBackground(const double timeout_sec) {
+bool HttpServerImpl::waitBackground(const double timeout_sec) {
   auto t = std::chrono::system_clock::now();
   for(;;) {
     std::this_thread::sleep_for(std::chrono::milliseconds(30));
@@ -134,12 +134,12 @@ bool ServerImpl::waitBackground(const double timeout_sec) {
   }
 }
 
-void ServerImpl::terminateBackground() {
+void HttpServerImpl::terminateBackground() {
   
 }
 
 HttpServer_ptr Webi::createHttpServerImpl() {
-  return std::make_shared<ServerImpl>();
+  return std::make_shared<HttpServerImpl>();
 }
 
 

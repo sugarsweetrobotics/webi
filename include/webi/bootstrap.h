@@ -8,137 +8,127 @@
 #include <functional>
 #include "webi/webi_common.h"
 
+#include "xml.h"
+#include "html.h"
+
 namespace webi {
 
-  struct ActionEvent {
-    std::string target_id;
-    std::string name;
-    std::string type;
+	namespace bootstrap {
+		class ViewPortTag : public Group {
 
-    ActionEvent(const std::string& target_id,
-		const std::string& name,
-		const std::string& type)
-    : target_id(target_id), name(name), type(type) {}
-  };
-
-  using EventCallback = std::function<void(const ActionEvent&)>;
-
-  class Attribute {
-
-  private:
-    std::string key_;
-    std::string value_;
-
-  public:
-    std::string getKey() const { return key_; }
-    std::string getValue() const { return value_; }
-
-    void setValue(const std::string& value) { value_ = value; }
-  public:
-    Attribute(const std::string& key, const std::string& value);
-    virtual ~Attribute();
-    std::string toString() const;
+		public:
+			//<meta charset="utf-8">
+			//<meta name = "viewport" content = "width=device-width, initial-scale=1, shrink-to-fit=no">
+			ViewPortTag() : Group(
+				Tag("meta", Attribute("charset", "utf-8")),
+				Tag("meta", Attribute("name", "viewport"), Attribute("content", "width=device-width, initial-scale=1, shrink-to-fit=no"))
+			) {}
+		};
 
 
-  public:
-    bool operator==(const Attribute& a) const {
-      return (key_ == a.key_ && value_ == a.value_);
-    }
-  };
+		class CSSfromCDN : public Tag {
 
-  using AttributeSet = std::vector<Attribute>;
+		public:
+			//<link rel = "stylesheet" href = "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
+			// integrity = "sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin = "anonymous">
+			CSSfromCDN() : Tag("link", Attribute("rel", "stylesheet"), 
+				Attribute("href", "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"), 
+				Attribute("integrity", "sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"),
+				Attribute("crossorigin", "anonymous")
+			) {}
+		};
 
+		class ScriptsfromCDN : public Group {
+		public:
+			// <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+			//<script src = "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity = "sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin = "anonymous">< / script>
+			//<script src = "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity = "sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin = "anonymous">< / script>
 
-  class Server;
+			ScriptsfromCDN() : Group(
+				Tag("SCRIPT", Attribute("src", "https://code.jquery.com/jquery-3.3.1.slim.min.js"),
+					Attribute("integrity", "sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"),
+					Attribute("crossorigin", "anonymous")),
+				Tag("SCRIPT", Attribute("src", "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"),
+					Attribute("integrity", "sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"),
+					Attribute("crossorigin", "anonymous")),
+				Tag("SCRIPT", Attribute("src", "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"),
+					Attribute("integrity", "sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"),
+					Attribute("crossorigin", "anonymous"))) {}
+		};
 
-  class Tag {
-  protected:
-    std::map<std::string, EventCallback> eventListeners_;
-  protected:
-    std::string name_;
-    std::string value_;
-    AttributeSet attrs_;
+		class Nav : public Tag {
 
-  public:
-    std::vector<Tag> children;
+		public:
+			template<typename...R>
+			Nav(R...r) : Tag("nav", Classes("navbar navbar-expand-lg"),
+				Classes("navbar-light"), Classes("bg-light"), r...) {}
+		};
 
-  public:
-    std::string name() const { return name_; }
+		class NavToggleButton : public Tag {
+		public:
+			NavToggleButton() : Tag("button", Classes("navbar-toggler"),
+				Attribute("type", "button"), Attribute("data-toggle", "collapse"),
+				Attribute("data-target", "#navbarSupportedContent"), Attribute("aria-controls", "navbarSupportedContent"),
+				Attribute("aria-expanded", "false"), Attribute("aria-label", "Toggle navigation"),
+				Tag("span", Classes("navbar-toggler-icon"))
+			) {}
 
-    std::optional<EventCallback> eventListener(const std::string& key) const {
-      auto i  = eventListeners_.find(key);
-      if (i == eventListeners_.end()) {
-	return std::nullopt;
-      }
+		};
 
-      return i->second;
-    }
+		class NavBarBrand : public Tag {
+		public:
+			// <a class = "navbar-brand" href = "#">Navbar< / a>
+			template<typename...R>
+			NavBarBrand(const std::string& title, R... r) : Tag("a", Classes("navbar-brand"), Text(title), r...) {}
+		};
 
-    std::string attribute(const std::string& key) const {
-      for(auto a : attrs_) {
-	if (a.getKey() == key) return a.getValue();
-      }
-      return "";
-    }
+		/**
+		 *
+		 */
+		class NavBar : public Tag {
+		public:
+			template<typename...R>
+			NavBar(R... r) : Tag("DIV", Classes("collapse navbar-collapse"), 
+				ID("navbarSupportedContent"), 
+				Tag("ul", Classes("navbar-nav mr-auto"), r...)) {}
+		};
 
-    bool hasAttribute(const std::string& key) const {
-      for(auto a : attrs_) {
-	if (a.getKey() == key) return true;
-      }
+		class NavItem : public Tag {
+		public:
+			template<typename...R>
+			NavItem(R... r) : Tag("li", Classes("nav-item"), r...) {}
+		};
 
-      return false;
-    }
+		class NavLink : public Tag {
+		public:
+			template<typename...R>
+			NavLink(const std::string& title, R...r) : Tag("a", Text(title), Classes("nav-link"), r...) {}
+		};
 
-  public:
-    Tag(const std::string& name);
+		//<li class = "nav-item dropdown">
+		//	<a class = "nav-link dropdown-toggle" href = "#" id = "navbarDropdown" role = "button" data - toggle = "dropdown" aria - haspopup = "true" aria - expanded = "false">
+		//	Dropdown
+		//	< / a>
+		class NavDropdown : public Tag {
+		public:
+			template<typename...R>
+			NavDropdown(const std::string& caption, R...r) : Tag("li", Classes("nav-item", "dropdown"),
+				Tag("a", Classes("nav-link", "dropdown-toggle"), Attribute("role", "button"), Attribute("data-toggle", "dropdown"), Attribute("aria-haspopup", "true"), Attribute("aria-expanded", "false"),
+					Text(caption)), 
+				Tag("div", Classes("dropdown-menu"), Attribute("aria-labelledby", "navbarDropdown"), r...)) {}
 
-    Tag(const std::string& name, AttributeSet attrs);
+		};
 
-    void init() {}
+		class NavDropdownItem : public Tag {
+		public:
+			template<typename...R>
+			NavDropdownItem(const std::string& caption, R...r) : Tag("a", Classes("dropdown-item"), Text(caption), r...) {
+			}
+		};
 
-    template<typename T, typename...R>
-      auto init(const T& t, R... r) -> typename std::enable_if<std::is_base_of<Tag, T>::value>::type {
-      children.push_back(t);
-      init(r...);
-    }
-
-    template<typename A, typename...R>
-      auto init(const A& t, R... r) -> typename std::enable_if<std::is_base_of<Attribute, A>::value>::type {
-      attrs_.push_back(t);
-      init(r...);
-    }
-
-    template<typename T, typename...R>
-      Tag(const std::string& name, const T& t, R... r) : name_(name) {
-      init(t, r...);
-    }
-
-    template<typename T, typename...R>
-      Tag(const std::string& name, AttributeSet attrs, const T& t, R... r) : name_(name), attrs_(attrs) {
-      init(t, r...);
-    }
-
-    virtual ~Tag();
-
-    void copyFrom(const Tag& tag) {
-      children = tag.children;
-      attrs_ = tag.attrs_;
-    }
-
-    virtual std::string toString() const;
-
-  private:
-    void addAttribute(const Attribute& att) {
-      attrs_.push_back(att);
-    }
-  };
-
-  class Text : public Tag {
-  public:
-    Text(const std::string& value);
-    virtual ~Text();
-  };
-
-
-
+		class NavDropdownDivider : public Tag {
+		public:
+			NavDropdownDivider() : Tag("div", Classes("dropdown-divider")) {}
+		};
+	};
 };

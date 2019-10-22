@@ -14,7 +14,6 @@
 
 namespace webi {
 
-
   class WEBI_API HttpServer {
   private:
     Webi_ptr webi_ptr_;
@@ -76,6 +75,7 @@ namespace webi {
 
     virtual void terminateBackground() = 0;
   };
-
+  
   using HttpServer_ptr = std::shared_ptr<HttpServer>;
+
 };

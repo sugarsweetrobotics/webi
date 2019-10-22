@@ -36,10 +36,6 @@ Webi::~Webi() {
 }
 
 
-Server_ptr Webi::createServer() {
-
-  return std::make_shared<Server>(createHttpServer(), createWebSocketServer());
-}
 
 
 

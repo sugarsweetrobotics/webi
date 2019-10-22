@@ -13,83 +13,61 @@
 #include "websocket_server.h"
 
 namespace webi {
-  
-  class Document;
 
-  class WEBI_API Server {
-  private:
-    Webi_ptr webi_ptr_;
+	class Document;
 
-    void setWebi(Webi_ptr ptr) {
-      webi_ptr_ = ptr;
-    }
+	class WEBI_API Server {
+	private:
+		Webi_ptr webi_ptr_;
 
-    Webi_ptr getWebi() { return webi_ptr_; }
+		void setWebi(Webi_ptr ptr) {
+			webi_ptr_ = ptr;
+		}
 
-    friend class Webi;
+		Webi_ptr getWebi() { return webi_ptr_; }
 
-    HttpServer_ptr http_server_;
-    WebSocketServer_ptr websock_server_;
-  public:
-  Server(HttpServer_ptr http_server, WebSocketServer_ptr websock_server) : http_server_(http_server), websock_server_(websock_server) {}
+		friend class Webi;
+	public:
+		Server() {}
 
-    virtual ~Server() {}
-    
-    virtual void baseDirectory(const std::string& path) {
-      http_server_->baseDirectory(path);
-    }
-    
-    virtual void response(const std::string& path, const std::string& method, const std::string& contentType, const std::string& content) {
-      http_server_->response(path, method, contentType, content);
-    }
+		virtual ~Server() {}
 
-    virtual void response(const std::string& path, const std::string& method, const std::string& contentType, std::function<webi::Response(const webi::Request&)> callback) {
-      http_server_->response(path, method, contentType, callback);
-    }
-    
-    void get(const std::string& path, const Tag& tag) {
-      http_server_->get(path, tag);
-    }
+		virtual void baseDirectory(const std::string& path) = 0;
 
-    /**
-     * Run Server on Current Thread. This function blocks until signal is raised..
-     */
-    virtual void runForever(const int32_t port=8080, const int32_t websock_port=8081) {
-      websock_server_->runBackground();
-      http_server_->runForever(port);
-    }
-    
-    /**
-     * Run Server on Background Thread.
-     * @see waitBackground
-     * @see terminateBackground
-     */
-    virtual void runBackground(const int32_t port=8080, const int32_t websock_port=8081) {
-      http_server_->runBackground(port);
-      websock_server_->runBackground(websock_port);
-    }
+		virtual void response(const std::string& path, const std::string& method, const std::string& contentType, const std::string& content) = 0;
 
-    /**
-     *
-     * @param timeout_sec Timeout Interval. Forever if negative.
-     * @return Server is ended if true. Timeout if false.
-     */
-    virtual bool waitBackground(const double timeout_sec=-1) {
-      return http_server_->waitBackground(timeout_sec);
-    }
+		virtual void response(const std::string& path, const std::string& method, const std::string& contentType, std::function<webi::Response(const webi::Request&)> callback) = 0;
 
-    virtual void terminateBackground() {
-      return http_server_->terminateBackground();
-    }
+		virtual void get(const std::string& path, const Tag& tag) = 0;
 
-    webi::Document createDocument();
+		/**
+		 * Run Server on Current Thread. This function blocks until signal is raised..
+		 */
+		virtual void runForever(const int32_t port = 8080, const int32_t websock_port = 8081) = 0;
 
-    void elementCommandById(const std::string& id, 
-			    const std::string& direction,
-			    const std::string& command,
-			    const std::string& arg);
+		/**
+		 * Run Server on Background Thread.
+		 * @see waitBackground
+		 * @see terminateBackground
+		 */
+		virtual void runBackground(const int32_t port = 8080, const int32_t websock_port = 8081) = 0;
 
-  };
+		/**
+		 *
+		 * @param timeout_sec Timeout Interval. Forever if negative.
+		 * @return Server is ended if true. Timeout if false.
+		 */
+		virtual bool waitBackground(const double timeout_sec = -1) = 0;
+		virtual void terminateBackground() = 0;
 
-  using Server_ptr = std::shared_ptr<Server>;
+		virtual webi::Document createDocument() = 0;
+
+		virtual void elementCommandById(const std::string& id,
+			const std::string& direction,
+			const std::string& command,
+			const std::string& arg) = 0;
+
+	};
+
+	using Server_ptr = std::shared_ptr<Server>;
 };

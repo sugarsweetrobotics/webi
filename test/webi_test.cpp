@@ -19,17 +19,17 @@ int main(void) {
   P labelDown(Text("Down button ->"), style.gridStyle(1, 1));
 
   Button upButton("Up", ID("button_up"), style.gridStyle(2, 0),
-		  [&document](const ActionEvent& e) {
+		  EventListener("onclick", [&document](const ActionEvent& e) {
 		    std::cout << "Up Button Clicked" << std::endl;
 		    auto elem = document.getElementById("webi_content");
 		    elem.setInnerHTML("Value is Up");
-		  });
+		  }));
   Button downButton("Down", ID("button_down"), style.gridStyle(2, 1),
-		    [&document](const ActionEvent& e) {
+		    EventListener("onclick", [&document](const ActionEvent& e) {
 		      std::cout << "Down Button Clicked" << std::endl;
 		      auto elem = document.getElementById("webi_content");
 		      elem.setInnerHTML("Value is Down");
-		    });
+		    }));
   
   s->get("/", HTML(
 		   Header(

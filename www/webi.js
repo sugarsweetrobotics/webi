@@ -20,6 +20,14 @@ webi.on_websocket_message = function(e) {
     }
 };
 
+webi.on_action_event = function(target, type, eventType, id) {
+	var msg = {target: target,
+	type: type,
+	id: id,
+	eventType: eventType,
+};
+document.webSocket.send(JSON.stringify(msg));
+}
 
 webi.on_message_element = function(msg) {
     let e = document.getElementById(msg.id);

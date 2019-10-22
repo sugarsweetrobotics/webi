@@ -1,5 +1,5 @@
 set(webi_srcs webi.cpp server.cpp http_server.cpp http_server_cpphttplib.cpp 
-	      html.cpp websocket_server_ixwebsocket.cpp css.cpp
+	      html.cpp websocket_server_ixwebsocket.cpp css.cpp xml.cpp
 	      remote_dom.cpp 
 		${headers}
 	      )
