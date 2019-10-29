@@ -14,27 +14,47 @@ webi.on_button = function(button_id) {
 }
 
 webi.on_websocket_message = function(e) {
-    let obj = JSON.parse(e.data);
-    if (obj.type == "element") {
-	webi.on_message_element(obj);
-    }
+	let obj = JSON.parse(e.data);
+	if (obj.type == "element") {
+		webi.on_message_element(obj);	
+	}
 };
 
 webi.on_action_event = function(target, type, eventType, id) {
-	var msg = {target: target,
-	type: type,
-	id: id,
-	eventType: eventType,
-};
-document.webSocket.send(JSON.stringify(msg));
+	var msg = {
+		target: target,
+		type: type,
+		id: id,
+		eventType: eventType,
+	};
+	document.webSocket.send(JSON.stringify(msg));
+}
+
+webi.on_message_event = function(id, value) {
+	var msg = {
+		id: id,
+		value: value,
+	}
+	document.webSocket.send(JSON.stringify(msg));
 }
 
 webi.on_message_element = function(msg) {
     let e = document.getElementById(msg.id);
     if (e) {
-	if (msg.cmd === "innerHTML") {
-	    e.innerHTML = msg.arg;
-	}
+		if (msg.cmd === "innerHTML") {
+			if (msg.dir == "set") {
+				e.innerHTML = msg.arg;
+			} else if (msg.dir == "get") {
+				webi.on_message_event(msg.id, e.innerHTML);
+			}
+		}
+		if (msg.cmd === "value") {
+			if (msg.dir == "set") {
+				e.value = msg.arg;
+			} else if (msg.dir == "get") {
+				webi.on_message_event(msg.id, e.value);
+			}
+		}
     }
 }
 

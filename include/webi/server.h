@@ -16,6 +16,10 @@ namespace webi {
 
 	class Document;
 
+	class ElementResponse;
+	
+	struct WebiMessage;
+
 	class WEBI_API Server {
 	private:
 		Webi_ptr webi_ptr_;
@@ -66,6 +70,12 @@ namespace webi {
 			const std::string& direction,
 			const std::string& command,
 			const std::string& arg) = 0;
+
+		virtual void bookResponse(std::function<bool(const WebiMessage&)> filter, std::function<void(const WebiMessage&)> callback) = 0;
+
+		virtual bool parseBookedResponse(const WebiMessage& msg) = 0;
+
+		virtual void elementResponseById(const std::string& id, std::function<void(const ElementResponse& response)> callback) = 0;
 
 	};
 

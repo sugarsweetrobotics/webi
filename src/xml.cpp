@@ -16,10 +16,16 @@ std::string Attribute::toString() const {
 	return getKey() + "=\"" + getValue() + "\"";
 }
 
+Tag::Tag() : name_("") {}
 
 Tag::Tag(const std::string& name) : name_(name) {}
 
-Tag::Tag(const std::string& name, AttributeSet attrs) : name_(name), attrs_(attrs) {}
+Tag::Tag(const std::string& name, const TagSet& tags) : name_(name), children(tags) {}
+
+Tag::Tag(const std::string& name, const AttributeSet& attrs) : name_(name), attrs_(attrs) {}
+
+Tag::Tag(const std::string& name, const AttributeSet& attrs, const TagSet& tags) : name_(name), attrs_(attrs), children(tags) {}
+
 
 Tag::~Tag() {}
 
@@ -34,10 +40,10 @@ static AttributeSet join(AttributeSet attrs) {
 			return_values.push_back(a);
 		}
 		else {
-			for (auto r : return_values) {
+			for (int i = 0; i < return_values.size();i++) {// : return_values) {
+				auto r = return_values[i];
 				if (r.getKey() == a.getKey()) {
-					std::swap(r, return_values.back());
-					return_values.pop_back();
+					return_values.erase(return_values.begin() + i);
 					r.setValue(r.getValue() + " " + a.getValue()); // Need Brank for Classes
 					return_values.push_back(r);
 				}
@@ -72,16 +78,3 @@ std::string Tag::toString() const {
 	}
 	return buf;
 }
-
-std::string Group::toString() const {
-	if (value_.length() > 0) return value_;
-	std::string buf;
-	for (auto c : children) {
-		buf += c.toString();
-	}
-	return buf;
-}
-
-Text::Text(const std::string& value) : Tag("") { value_ = value; }
-
-Text::~Text() {}

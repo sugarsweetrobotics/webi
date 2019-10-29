@@ -13,35 +13,35 @@ int main(void) {
   auto document = s->createDocument();
   s->baseDirectory("../www");
 
-  GridLayoutStyler style({20, 150, 30}, {40, 40});
+  GridLayoutStyler gridStyle({20, 150, 30}, {40, 40});
 
-  P labelUp(Text("Up button ->"), style.gridStyle(1, 0), Style("color:red;"));
-  P labelDown(Text("Down button ->"), style.gridStyle(1, 1));
+  auto labelUp = p(text("Up button ->"), gridStyle.gridStyle(1, 0), style("color:red;"));
+  auto labelDown = p(text("Down button ->"), gridStyle.gridStyle(1, 1));
 
-  Button upButton("Up", ID("button_up"), style.gridStyle(2, 0),
+  auto upButton = button("Up", id("button_up"), gridStyle.gridStyle(2, 0),
 		  EventListener("onclick", [&document](const ActionEvent& e) {
 		    std::cout << "Up Button Clicked" << std::endl;
 		    auto elem = document.getElementById("webi_content");
 		    elem.setInnerHTML("Value is Up");
 		  }));
-  Button downButton("Down", ID("button_down"), style.gridStyle(2, 1),
+  auto downButton = button("Down", id("button_down"), gridStyle.gridStyle(2, 1),
 		    EventListener("onclick", [&document](const ActionEvent& e) {
 		      std::cout << "Down Button Clicked" << std::endl;
 		      auto elem = document.getElementById("webi_content");
 		      elem.setInnerHTML("Value is Down");
 		    }));
   
-  s->get("/", HTML(
-		   Header(
+  s->get("/", html(
+		   head(
 			  WebiScript(), 
-			  StyleSheet("webi.css")),
-		   Body(
+			  styleSheet("webi.css")),
+		   body(
 			WebiToolbar(),
-			H1(Text("This is Title")),
-			P(ID("webi_content"),
-			  Text("This is Test Page of Webi")
+			h1(text("This is Title")),
+			p(id("webi_content"),
+			  text("This is Test Page of Webi")
 			  ),
-			DIV(style.containerStyle(),
+			div(gridStyle.containerStyle(),
 			    labelUp,upButton,
 			    labelDown, downButton
 			    )

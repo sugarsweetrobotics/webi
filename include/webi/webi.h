@@ -18,12 +18,16 @@ namespace webi {
     std::string type;
     std::string id;
     std::string eventType;
+	std::string body;
+	std::string value;
 
     WebiMessage(const std::string& target, 
 		const std::string& type,
 		const std::string& id,
-		const std::string& eventType)
-    : target(target), type(type), id(id), eventType(eventType) {}
+		const std::string& eventType,
+		const std::string& body,
+		const std::string& value)
+    : target(target), type(type), id(id), eventType(eventType), body(body), value(value) {}
   };
 
   struct AnyEventListener {
@@ -45,8 +49,8 @@ namespace webi {
     Server_ptr createServer();
   private:
     
-    HttpServer_ptr createHttpServer();
-    WebSocketServer_ptr createWebSocketServer();
+    HttpServer_ptr createHttpServer(Server_ptr ptr);
+    WebSocketServer_ptr createWebSocketServer(Server_ptr ptr);
 
   private:
     WebSocketServer_ptr createWebSocketServerImpl();

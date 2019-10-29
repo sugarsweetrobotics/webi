@@ -19,7 +19,11 @@ namespace webi {
   };
 
   struct WebSocketMessage {
-    std::string body;
+	  std::string target;
+	  std::string target_id;
+      std::string body;
+
+	  WebSocketMessage(const std::string& body) : body(body) {}
   };
 
   class WEBI_API WebSocketServer {
@@ -48,6 +52,7 @@ namespace webi {
     virtual bool waitBackground(const double timeout_sec=-1) = 0;
 
     virtual void terminateBackground() = 0;
+
   };
 
   using WebSocketServer_ptr = std::shared_ptr<WebSocketServer>;

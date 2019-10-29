@@ -6,6 +6,9 @@
 
 namespace webi {
 
+	struct Header {
+
+  };
 
   struct Response {
   public:

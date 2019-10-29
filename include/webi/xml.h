@@ -33,6 +33,7 @@ namespace webi {
 
 	public:
 		std::string getKey() const { return key_; }
+
 		std::string getValue() const { 
 			if (value_callback_) {
 				return value_callback_.value()();
@@ -44,10 +45,25 @@ namespace webi {
 	public:
 		Attribute(const std::string& key, const std::string& value);
 		Attribute(const std::string& key, std::function<std::string()> cb);
+
+
 		virtual ~Attribute();
 		std::string toString() const;
 
 		Attribute(const Attribute& a) : Attribute(a.getKey(), a.getValue()) {}
+		Attribute(Attribute&& a) : Attribute(std::move(a.key_), a.getValue()) {}
+
+		Attribute& operator=(const Attribute& a) {
+			this->key_ = a.getKey();
+			this->value_ = a.getValue();
+			return *this;
+		}
+
+		Attribute& operator=(Attribute&& a) {
+			this->key_ = std::move(a.key_);
+			this->value_ = a.getValue();
+			return *this;
+		}
 
 	public:
 		bool operator==(const Attribute& a) const {
@@ -70,6 +86,10 @@ namespace webi {
 
 	class Server;
 
+	class Tag;
+
+	using TagSet = std::vector<Tag>;
+
 	class Tag {
 	protected:
 		std::map<std::string, EventCallback> eventListeners_;
@@ -79,9 +99,51 @@ namespace webi {
 		AttributeSet attrs_;
 
 	public:
-		std::vector<Tag> children;
+		TagSet children;
 
 	public:
+		Tag(const Tag& tag) : name_(tag.name_), value_(tag.value_) {
+			for (auto a : tag.attrs_)
+				attrs_.push_back(a);
+			for (auto t : tag.children)
+				children.push_back(t);
+			for (auto p : tag.eventListeners_) {
+				eventListeners_[p.first] = p.second;
+			}
+		}
+
+		Tag(Tag&& tag) : name_(std::move(tag.name_)), value_(std::move(tag.value_)),
+			attrs_(std::move(tag.attrs_)),
+			children(std::move(tag.children)), eventListeners_(std::move(tag.eventListeners_)) {
+		}
+
+		Tag& operator=(const Tag& tag) {
+			this->name_ = tag.name_;
+			this->value_ = tag.value_;
+
+			for (auto a : tag.attrs_)
+				attrs_.push_back(a);
+			for (auto t : tag.children)
+				children.push_back(t);
+			for (auto p : tag.eventListeners_) {
+				eventListeners_[p.first] = p.second;
+			}
+			return *this;
+		}
+
+		Tag& operator=(Tag&& tag) {
+			this->name_ = std::move(tag.name_);
+			this->value_ = std::move(tag.value_);
+			this->attrs_ = std::move(tag.attrs_);
+			this->children = std::move(tag.children);
+			this->eventListeners_ = std::move(tag.eventListeners_);
+			return *this;
+		}
+
+	public:
+
+		Tag& setValue(const std::string& value) { value_ = value; return *this; }
+
 		std::string name() const { return name_; }
 
 		std::optional<EventCallback> eventListener(const std::string& key) const {
@@ -123,20 +185,48 @@ namespace webi {
 			return getAttribute("id");
 		}
 	public:
+		Tag();
+
+
 		Tag(const std::string& name);
 
-		Tag(const std::string& name, AttributeSet attrs);
+		Tag(const std::string& name, const TagSet& tag);
+
+		Tag(const std::string& name, const AttributeSet& attrs);
+
+		Tag(const std::string& name, const AttributeSet& attrs, const TagSet& tags);
 
 		void init() {}
 
-		template<typename T, typename...R>
-		auto init(const T& t, R... r) -> typename std::enable_if<std::is_base_of<Tag, T>::value>::type {
+		auto init(Tag&& t) {
+			children.emplace_back(t);
+		}
+
+		auto init(const Tag& t) {
 			children.push_back(t);
-			init(r...);
+		}
+
+		template<typename T, typename...R>
+		auto init(Tag&& t, T t2, R... r) {
+			children.emplace_back(t);
+			init(std::forward<T>(t2), r...);
+		}
+
+		template<typename T, typename...R>
+		auto init(const Tag& t, T t2, R... r) {
+			children.push_back(t);
+			init(std::forward<T>(t2), r...);
 		}
 
 		template<typename A, typename...R>
 		auto init(const A& t, R... r) -> typename std::enable_if<std::is_base_of<Attribute, A>::value>::type {
+			attrs_.push_back(t);
+			init(r...);
+		}
+
+
+		template<typename A, typename...R>
+		auto init(A&& t, R... r) -> typename std::enable_if<std::is_base_of<Attribute, A>::value>::type {
 			attrs_.push_back(t);
 			init(r...);
 		}
@@ -151,21 +241,21 @@ namespace webi {
 		}
 		
 		template<typename T, typename...R>
-		Tag(const std::string& name, const T& t, R... r) : name_(name) {
-			init(t, r...);
+		Tag(const std::string& name, T t, R... r) : name_(name) {
+			init(std::forward<T>(t), r...);
 		}
 
-		template<typename T, typename...R>
-		Tag(const std::string& name, AttributeSet attrs, const T& t, R... r) : name_(name), attrs_(attrs) {
-			init(t, r...);
+		template<typename...R>
+		Tag(const std::string& name, const AttributeSet& attrs, R... r) : name_(name), attrs_(attrs) {
+			init(r...);
+		}
+
+		template<typename...R>
+		Tag::Tag(const std::string& name, Attribute&& att, R... r) : name_(name) {
+			init(std::forward(att), r...);
 		}
 
 		virtual ~Tag();
-
-		void copyFrom(const Tag& tag) {
-			children = tag.children;
-			attrs_ = tag.attrs_;
-		}
 
 		virtual std::string toString() const;
 
@@ -175,20 +265,16 @@ namespace webi {
 		}
 	};
 
-	class Group : public Tag {
-	public:
-		template<typename...R>
-		Group(R... r) : Tag("GROUP", r...) {}
-	public:
-		virtual std::string toString() const override;
-	};
+	template<typename...R>
+	Tag group(R... r) {
+		return Tag("GROUP", r...);
+	}
 
-	class Text : public Tag {
-	public:
-		Text(const std::string& value);
-		virtual ~Text();
-	};
-
+	inline Tag text(const std::string& value) {
+		Tag t;
+		t.setValue(value);
+		return t;
+	}
 
 
 };

@@ -31,10 +31,18 @@ private:
 
 	HttpServer_ptr http_server_;
 	WebSocketServer_ptr websock_server_;
-public:
-	ServerImpl(HttpServer_ptr http_server, WebSocketServer_ptr websock_server)
-		: http_server_(http_server), websock_server_(websock_server) {}
 
+	std::vector<std::pair<std::function<bool(const webi::WebiMessage&)>, std::function<void(const webi::WebiMessage&)>>> bookedResponseCallbacks_;
+
+
+public:
+	void setHttpServer(HttpServer_ptr ptr) { http_server_ = ptr; }
+	void setWebSocketServer(WebSocketServer_ptr ptr) { websock_server_ = ptr; }
+
+public:
+	ServerImpl() {}
+	
+	
 	virtual ~ServerImpl() {}
 
 	virtual void baseDirectory(const std::string& path) override {
@@ -95,8 +103,51 @@ public:
 		websock_server_->send(convert({ id, direction, command, arg }));
 	}
 
+	virtual void bookResponse(std::function<bool(const WebiMessage&)> filter, std::function<void(const WebiMessage&)> callback) override {
+		bookedResponseCallbacks_.push_back({ filter, callback });
+	}
+
+
+	virtual bool parseBookedResponse(const WebiMessage& msg) override {
+		int found_index = -1;
+		for (int i = 0; i < bookedResponseCallbacks_.size();i++) 
+		{
+			auto cbs = bookedResponseCallbacks_[i];
+			if (cbs.first(msg)) {
+				cbs.second(msg);
+
+				found_index = i;
+				break;
+			}
+		}
+
+		if (found_index >= 0) {
+			bookedResponseCallbacks_.erase(bookedResponseCallbacks_.begin() + found_index);
+			return true;
+		}
+
+		return false;
+	}
+
+	virtual void elementResponseById(const std::string& id, std::function<void(const ElementResponse&)> callback) override {
+		bookResponse([id](const WebiMessage& msg) {
+				return (msg.id == id);
+			},
+			[callback](const WebiMessage& msg) {
+				ElementResponse res;
+				res.target = msg.target;
+				res.target_id = msg.id;
+				res.value = msg.value;
+				callback(res);
+			});
+
+	}
+
 };
 
 Server_ptr Webi::createServer() {
-	return std::make_shared<ServerImpl>(createHttpServer(), createWebSocketServer());
+	auto svr = std::make_shared<ServerImpl>();
+	svr->setHttpServer(createHttpServer(svr));
+	svr->setWebSocketServer(createWebSocketServer(svr));
+	return svr;
 }

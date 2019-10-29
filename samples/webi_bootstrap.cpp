@@ -5,6 +5,7 @@
 
 using namespace webi;
 
+namespace bs = webi::bootstrap;
 
 int main(void) {
 	webi::Webi webi;
@@ -14,58 +15,62 @@ int main(void) {
 	//auto document = s->createDocument();
 	s->baseDirectory("../www");
 
-	/*
-	GridLayoutStyler style({ 20, 150, 30 }, { 40, 40 });
+	auto navbar = bs::nav(
+		bs::navBarBrand("NavBar", href("#")),
+		bs::navToggleButton(),
+		bs::navBar(
+			bs::navItem(bs::navLink("Home", href("#")), className("active")),
+			bs::navDropdown("Dropdown", href("#"),
+				bs::navDropdownItem("Action 1", href("#"), id("bs-action-01"),
+					EventListener("onclick",
+						[](const ActionEvent& e) { std::cout << "Action 1 is clicked." << std::endl; }
+					)
+				),
+				bs::navDropdownItem("Action 2", href("#"), id("bs-action-02"),
+					EventListener("onclick",
+						[](const ActionEvent& e) { std::cout << "Action 2 is clicked." << std::endl; }
+					)
+				),
+				bs::navDropdownItem("Action 3", href("#"), id("bs-action-03"),
+					EventListener("onclick",
+						[](const ActionEvent& e) { std::cout << "Action 3 is clicked." << std::endl; }
+					)
+				)
+			)
+		)
+	);
 
-	P labelUp(Text("Up button ->"), style.gridStyle(1, 0), Style("color:red;"));
-	P labelDown(Text("Down button ->"), style.gridStyle(1, 1));
-
-	Button upButton("Up", ID("button_up"), style.gridStyle(2, 0),
-		[&document](const ActionEvent& e) {
-		std::cout << "Up Button Clicked" << std::endl;
-		auto elem = document.getElementById("webi_content");
-		elem.setInnerHTML("Value is Up");
-	});
-	Button downButton("Down", ID("button_down"), style.gridStyle(2, 1),
-		[&document](const ActionEvent& e) {
-		std::cout << "Down Button Clicked" << std::endl;
-		auto elem = document.getElementById("webi_content");
-		elem.setInnerHTML("Value is Down");
-	})
-	*/;
-
-	auto doc = HTML(
-		Header(
+	auto doc = html(
+		head(
 			WebiScript(),
-			bootstrap::ViewPortTag(),
-			bootstrap::CSSfromCDN()
+			bs::ViewPortTag(),
+			bs::CSSfromCDN()
 		),
-		Body(
-			bootstrap::Nav(
-				bootstrap::NavBarBrand("NavBar", Href("#")),
-				bootstrap::NavToggleButton(),
-				bootstrap::NavBar(
-					bootstrap::NavItem(bootstrap::NavLink("Home", Href("#")), Classes("active")),
-					bootstrap::NavDropdown("Dropdown", Href("#"),
-						bootstrap::NavDropdownItem("Action 1", Href("#"), ID("bs-action-01"),
-							EventListener("onclick",
-								[](const ActionEvent& e) { std::cout << "Action 1 is clicked." << std::endl;}
-							)
-						),
-						bootstrap::NavDropdownItem("Action 2", Href("#"), ID("bs-action-02"),
-							EventListener("onclick",
-								[](const ActionEvent& e) { std::cout << "Action 2 is clicked." << std::endl; }
-							)
-						),
-						bootstrap::NavDropdownItem("Action 3", Href("#"), ID("bs-action-03"),
-							EventListener("onclick",
-								[](const ActionEvent& e) { std::cout << "Action 3 is clicked." << std::endl; }
-							)
+		body(
+			navbar,
+			bs::container(
+				bs::gridRow(
+					bs::gridColumn(
+						bs::card(
+							bs::cardTitle("Card Title"),
+							bs::cardSubtitle("Card SubTitle"),
+							bs::cardText("Webi says Hello Bootstrap. The world is beutiful"),
+							bs::button("Primary Button", bs::Button::Primary),
+							bs::button("Secondary Button", bs::Button::Secondary)
+						)
+					), 
+					bs::gridColumn(
+						bs::card(
+							bs::cardTitle("Card Title"),
+							bs::cardSubtitle("Card SubTitle"),
+							bs::cardText("Webi says Hello Bootstrap. The world is beutiful")
 						)
 					)
 				)
 			),
-			bootstrap::ScriptsfromCDN()
+			
+
+			bs::ScriptsfromCDN()
 		)
 	);
 

@@ -1,4 +1,4 @@
-#pragma once
+ #pragma once
 
 #include <string>
 #include <vector>
@@ -8,171 +8,117 @@
 
 namespace webi {
 
-	/**
-	 *
-	 */
-	class ID : public Attribute {
-	public:
-		ID(const std::string& value) : Attribute("id", value) {}
-		virtual ~ID() {}
+	inline Attribute id(const std::string& value) {
+		return Attribute("id", value);
+	}
+
+	inline std::string concatClass(const std::string& s) {
+		return s;
+	}
+
+	template<typename... R>
+	std::string concatClass(const std::string& s, R... r) {
+		return s + " " + concatClass(r...);
+	}
+
+	template<typename... R>
+	Attribute className(R... r) {
+		return Attribute("class", concatClass(r...));
+	}
+
+	inline Attribute style(const std::string& value) {
+		return Attribute("style", value);
+	}
+
+	template<typename T, typename...R>
+	Tag h1(const T& t, R... r) {
+		return Tag("H1", t, r...);
+	}
+
+	template<typename T, typename...R>
+	Tag h2(const T& t, R... r) {
+		return Tag("H2", t, r...);
+	}
+
+	template<typename T, typename...R>
+	Tag h3(const T& t, R... r) {
+		return Tag("H3", t, r...);
+	}
+
+	template<typename T, typename...R>
+	Tag h4(const T& t, R... r) {
+		return Tag("H4", t, r...);
+	}
+
+	template<typename...R>
+	Tag h5(R... r) {
+		return Tag("H5", r...);
+	}
+
+	template<typename T, typename...R>
+	Tag h6(const T& t, R... r) {
+		return Tag("H6", t, r...);
+	}
+
+
+	template<typename...R>
+	Tag div(R... r) {
+		return Tag("DIV", r...);
 	};
 
-	/**
-	 *
-	 */
-	class Classes : public Attribute {
-	private:
-		std::string concatClass(const std::string& s) {
-			return s;
-		}
-
-		template<typename... R>
-		std::string concatClass(const std::string& s, R... r) {
-			return s + " " + concatClass(r...);
-		}
-
-	public:
-		template<typename... R>
-		Classes(R... r) : Attribute("class", concatClass(r...)) {}
-
-		Classes(const std::string& value) : Attribute("class", value) {}
-		virtual ~Classes() {}
+	template<typename...R>
+	Tag p(R... r) { 
+		return Tag("P", r...);
 	};
 
-	/**
-	 *
-	 */
-	class Style : public Attribute {
-	public:
-		Style(const std::string& value) : Attribute("style", value) {}
-		virtual ~Style() {}
+	template<typename...R>
+	Tag html(R... r) {
+		return Tag("HTML", r...);
+	}
+
+	template<typename...R>
+	Tag head(R... r) {
+		return Tag("HEAD", r...);
+	}
+
+	inline Tag title(const std::string& title) { 
+		return Tag("TITLE", text(title));
 	};
 
-	/**
-	 *
-	 */
-	class H1 : public Tag {
-	public:
-		H1() : Tag("H1") {}
+	template<typename...R>
+	Tag body(R... r) {
+		return Tag("BODY", r...);
+	}
 
-		template<typename T, typename...R>
-		H1(const T& t, R... r) : Tag("H1", t, r...) {}
-		virtual ~H1() {}
-	};
-
-	class DIV : public Tag {
-	public:
-		DIV() : Tag("DIV") {}
-		template<typename T, typename...R>
-		DIV(const T& t, R... r) : Tag("DIV", t, r...) {}
-		virtual ~DIV() {}
-	};
-
-	/**
-	 *
-	 */
-	class P : public Tag {
-	public:
-		P() : Tag("P") {}
-
-		template<typename T, typename...R>
-		P(const T& t, R... r) : Tag("P", t, r...) {}
-		virtual ~P() {}
-	};
-
-	/**
-	 *
-	 */
-	class HTML : public Tag {
-	public:
-		HTML() : Tag("HTML") {}
-
-		template<typename T, typename...R>
-		HTML(const T& t, R... r) : Tag("HTML", t, r...) {}
-		virtual ~HTML() {}
-	};
-
-	/**
-	 *
-	 */
-	class Header : public Tag {
-	public:
-		Header() : Tag("HEAD") {}
-
-		template<typename T, typename...R>
-		Header(const T& t, R... r) : Tag("HEAD", t, r...) {}
-		virtual ~Header() {}
-	};
-
-	/**
-	 *
-	 */
-	class Title : public Tag {
-	public:
-		Title(const std::string& title) : Tag("TITLE", Text(title)) {}
-	};
-
-
-	/**
-	 *
-	 */
-	class Body : public Tag {
-	public:
-		Body() : Tag("BODY") {}
-
-		template<typename T, typename...R>
-		Body(const T& t, R... r) : Tag("BODY", t, r...) {}
-		virtual ~Body() {}
-	};
-
-	/**
-	 *
-	 */
-	class StyleSheet : public Tag {
-	private:
-	public:
-		StyleSheet(const std::string& ref) : Tag("LINK", Attribute("rel", "stylesheet"),
+	inline Tag styleSheet(const std::string& ref) {
+		return Tag("LINK", { Attribute("rel", "stylesheet"),
 			Attribute("type", "text/css"),
-			Attribute("href", ref)) {}
-		virtual ~StyleSheet() {}
-	};
+			Attribute("href", ref) });
+	}
 
-	/**
-	 *
-	 */
-	class Button : public Tag {
-	private:
-		std::string id_;
+	template<typename...R>
+	Tag input(const std::string& caption, const std::string& type, const Attribute& _id, R...r) {
+		return Tag("input", { _id,
+			Attribute("type", type), Attribute("value", caption) }, r...);
+	}
 
-	public:
-		std::string getID() const { return id_; }
-	public:
+	template<typename...R>
+	Tag button(const std::string& caption, const Attribute& _id, R...r) {
+		return input(caption, "button", _id, r...);
+	}
 
-		//Button(const std::string& caption, const ID& id, EventCallback callback);
-
-		
-		template<typename...R>
-		Button(const std::string& caption, const ID& id, R...r) : Tag("input", id,
-			Attribute("type", "button"), Attribute("value", caption), r...),
-			id_(id.getValue()) {}
-		
-//		Button(const std::string& caption, const ID& id, const Attribute& style, EventCallback callback);
-		virtual ~Button();
-
-	public:
-		virtual std::string toString() const override;
-
-	public:
-		static std::string generateOnClickedFunction(const Button* button);
-	};
+	template<typename...R>
+	Tag textBox(const std::string& caption, const Attribute& id, R...r) {
+		return input(caption, "text", id, r...);
+	}
 
 	/**
 	 *
 	 */
 	class WebiScript : public Tag {
 	public:
-		WebiScript() : Tag("SCRIPT", Attribute("type", "text/javascript"),
-			Attribute("src", "webi.js")) {}
+		WebiScript() : Tag("SCRIPT", { Attribute("type", "text/javascript"),
+			Attribute("src", "webi.js") }) {}
 		virtual ~WebiScript() {}
 
 		static std::string generateWebiScript();
@@ -185,10 +131,8 @@ namespace webi {
 		virtual ~WebiToolbar() {}
 	};
 
-
-	class Href : public Attribute {
-	public:
-		template<typename...R>
-		Href(const std::string& link, R... r) : Attribute("href", link, r...) {}
-	};
+	template<typename...R>
+	Attribute href(const std::string& link, R... r) {
+		return Attribute("href", link, r...);
+	}
 };

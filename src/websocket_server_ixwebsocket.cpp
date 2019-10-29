@@ -130,7 +130,7 @@ void WebSocketServerImpl::runBackground(const int32_t port) {
 	      // Here we send it in the same mode as it was received.
 	    //webSocket->send(msg->str, msg->binary);
 	    std::cout << msg->str << std::endl;
-	    this->cb_on_message_({msg->str});
+	    this->cb_on_message_(WebSocketMessage(msg->str));
 	  }
 	});
     });
