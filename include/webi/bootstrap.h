@@ -26,14 +26,20 @@ namespace webi {
 		class CSSfromCDN : public Tag {
 
 		public:
-			//<link rel = "stylesheet" href = "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
-			// integrity = "sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin = "anonymous">
 			CSSfromCDN() : Tag("link", { Attribute("rel", "stylesheet"),
 				Attribute("href", "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"),
 				Attribute("integrity", "sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"),
 				Attribute("crossorigin", "anonymous") }
 			) {}
 		};
+
+		class CSS : public Tag {
+
+		public:
+			CSS() : Tag("link", { Attribute("rel", "stylesheet"),
+				Attribute("href", "bootstrap-4.3.1/css/bootstrap.min.css") }) {}
+		};
+
 
 		inline Tag ScriptsfromCDN() {
 			return group(
@@ -44,6 +50,20 @@ namespace webi {
 					Attribute("integrity", "sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"),
 					Attribute("crossorigin", "anonymous") }),
 				Tag("SCRIPT", { Attribute("src", "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"),
+					Attribute("integrity", "sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"),
+					Attribute("crossorigin", "anonymous") }));
+		}
+
+
+		inline Tag Scripts() {
+			return group(
+				Tag("SCRIPT", { Attribute("src", "jquery-3.3.1/jquery.slim.min.js"),
+					Attribute("integrity", "sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"),
+					Attribute("crossorigin", "anonymous") }),
+				Tag("SCRIPT", { Attribute("src", "popper.js-1.14.7/umd/popper.min.js"),
+					Attribute("integrity", "sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"),
+					Attribute("crossorigin", "anonymous") }),
+				Tag("SCRIPT", { Attribute("src", "bootstrap-4.3.1/js/bootstrap.min.js"),
 					Attribute("integrity", "sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"),
 					Attribute("crossorigin", "anonymous") }));
 		}
@@ -122,18 +142,18 @@ namespace webi {
 			inline const static auto Primary = Attribute("class", "btn-primary");
 			inline const static auto Secondary = Attribute("class", "btn-secondary");
 
-			inline const static auto Success = "btn-success";
-			inline const static auto Danger = "btn-danger";
-			inline const static auto Warning = "btn-warning";
-			inline const static auto Info = "btn-info";
+			inline const static auto Success = Attribute("class", "btn-success");
+			inline const static auto Danger = Attribute("class", "btn-danger");
+			inline const static auto Warning = Attribute("class", "btn-warning");
+			inline const static auto Info = Attribute("class", "btn-info");
 
-			inline const static auto Light = "btn-light";
-			inline const static auto Dark = "btn-dark";
+			inline const static auto Light = Attribute("class", "btn-light");
+			inline const static auto Dark = Attribute("class", "btn-dark");
 
-			inline const static auto Link = "btn-link";
+			inline const static auto Link = Attribute("class", "btn-link");
 
-			inline const static auto Small = "btn-sm";
-			inline const static auto Large = "btn-lg";
+			inline const static auto Small = Attribute("class", "btn-sm");
+			inline const static auto Large = Attribute("class", "btn-lg");
 		};
 
 		template<typename...R>

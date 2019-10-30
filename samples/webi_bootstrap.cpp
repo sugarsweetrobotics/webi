@@ -44,7 +44,7 @@ int main(void) {
 		head(
 			WebiScript(),
 			bs::ViewPortTag(),
-			bs::CSSfromCDN()
+			bs::CSS()
 		),
 		body(
 			navbar,
@@ -70,7 +70,7 @@ int main(void) {
 			),
 			
 
-			bs::ScriptsfromCDN()
+			bs::Scripts()
 		)
 	);
 
