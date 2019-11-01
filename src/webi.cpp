@@ -1,3 +1,5 @@
+#include <sstream>
+
 #include "rapidjson/document.h"
 
 #include "webi/webi.h"
@@ -103,7 +105,7 @@ WebSocketServer_ptr Webi::createWebSocketServer(Server_ptr ptr) {
 			for (auto e : this->eventListeners_) {
 				auto m = m_.value();
 				if (m.id == e.target && m.eventType == e.type) {
-					e.callback(ActionEvent(e.target, "", e.type));
+					e.callback(ActionEvent(e.target, "", e.type, m.value));
 				}
 			}
 			return true;
@@ -114,21 +116,59 @@ WebSocketServer_ptr Webi::createWebSocketServer(Server_ptr ptr) {
 	return s;
 }
 
-void Webi::parse(const Tag& tag) {
-	parseImpl(tag);
-	for (auto c : tag.children) {
-		parse(c);
-	}
-}
 
-void Webi::parseImpl(const Tag& tag) {
+
+void parseEventListenerImpl(Webi* this_, std::vector<InitializerScript> &inits, const Tag& tag) {
+	/*
 	if (tag.hasAttribute("onclick") && tag.hasAttribute("id")) {
 		auto id = tag.attribute("id");
 		auto cb = tag.eventListener("onclick");
 		if (cb) {
-			eventListeners_.push_back({ id, "onclick", cb.value() });
+			this_->addEventListener(AnyEventListener(id, "onclick", cb.value()));
+		}
+	}*/
+	auto id = tag.attribute("id");
+	for (auto cb : tag.eventListeners()) {
+		this_->addEventListener(AnyEventListener(id, cb.name(), cb.callback()));
+	}
+
+
+	if (tag.hasInitializerScript()) {
+		inits.push_back(tag.initializer());
+	}
+
+	for (auto c : tag.children) {
+		parseEventListenerImpl(this_, inits, c);
+	}
+}
+
+
+void appendInitializerImpl(const std::vector<InitializerScript> &inits, Tag& tag) {
+	std::stringstream ss;
+	for (auto i : inits) {
+		ss << i.toString();
+	}
+	if (tag.name() == "BODY") {
+		tag.children.push_back(
+			script(scriptType("text/javascript"),
+
+				text("$(document).ready(function() {" +
+					ss.str() +
+					"});"
+				)
+			)
+		);
+	}
+	else {
+		for (int i = 0; i < tag.children.size(); i++) {
+			appendInitializerImpl(inits, tag.children[i]);
 		}
 	}
 }
 
 
+void Webi::parseEventListener(Tag& tag) {
+	std::vector<InitializerScript> initializers;
+	parseEventListenerImpl(this, initializers, tag);
+	appendInitializerImpl(initializers, tag);
+}

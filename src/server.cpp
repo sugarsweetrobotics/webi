@@ -57,7 +57,7 @@ public:
 		http_server_->response(path, method, contentType, callback);
 	}
 
-	virtual void get(const std::string& path, const Tag& tag) override {
+	virtual void get(const std::string& path, Tag& tag) override {
 		http_server_->get(path, tag);
 	}
 

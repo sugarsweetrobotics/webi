@@ -14,11 +14,18 @@ namespace webi {
 		std::string target_id;
 		std::string name;
 		std::string type;
+		std::string value;
 
 		ActionEvent(const std::string& target_id,
 			const std::string& name,
 			const std::string& type)
-			: target_id(target_id), name(name), type(type) {}
+			: target_id(target_id), name(name), type(type), value("") {}
+
+		ActionEvent(const std::string& target_id,
+			const std::string& name,
+			const std::string& type,
+			const std::string& value)
+			: target_id(target_id), name(name), type(type), value(value) {}
 	};
 
 	using EventCallback = std::function<void(const ActionEvent&)>;
@@ -84,6 +91,30 @@ namespace webi {
 		EventListener(const std::string& name, EventCallback callback) : name_(name), callback_(callback) {}
 	};
 
+	inline EventListener event(const std::string& name, EventCallback cb) {
+		return EventListener(name, cb);
+	}
+
+	class InitializerScript {
+	private:
+		std::string _script;
+
+	public:
+		InitializerScript() : _script() {}
+		InitializerScript(const std::string& text) : _script(text) {}
+		~InitializerScript() {}
+
+	public:
+		bool available() const { return _script.length() > 0; }
+		std::string toString() const { return _script; }
+
+	public:
+		InitializerScript& operator=(const InitializerScript& is) {
+			this->_script = is._script;
+			return *this;
+		}
+	};
+
 	class Server;
 
 	class Tag;
@@ -92,6 +123,7 @@ namespace webi {
 
 	class Tag {
 	protected:
+		InitializerScript initializer_;
 		std::map<std::string, EventCallback> eventListeners_;
 	protected:
 		std::string name_;
@@ -100,9 +132,16 @@ namespace webi {
 
 	public:
 		TagSet children;
+		std::vector<EventListener> eventListeners() const { 
+			std::vector<EventListener> cbs;
+			for (auto p : eventListeners_) {
+				cbs.push_back(EventListener(p.first, p.second));
+			}
+			return cbs;
+		}
 
 	public:
-		Tag(const Tag& tag) : name_(tag.name_), value_(tag.value_) {
+		Tag(const Tag& tag) : name_(tag.name_), value_(tag.value_), initializer_(tag.initializer_) {
 			for (auto a : tag.attrs_)
 				attrs_.push_back(a);
 			for (auto t : tag.children)
@@ -110,11 +149,12 @@ namespace webi {
 			for (auto p : tag.eventListeners_) {
 				eventListeners_[p.first] = p.second;
 			}
+
 		}
 
 		Tag(Tag&& tag) : name_(std::move(tag.name_)), value_(std::move(tag.value_)),
 			attrs_(std::move(tag.attrs_)),
-			children(std::move(tag.children)), eventListeners_(std::move(tag.eventListeners_)) {
+			children(std::move(tag.children)), eventListeners_(std::move(tag.eventListeners_)), initializer_(tag.initializer_) {
 		}
 
 		Tag& operator=(const Tag& tag) {
@@ -128,6 +168,7 @@ namespace webi {
 			for (auto p : tag.eventListeners_) {
 				eventListeners_[p.first] = p.second;
 			}
+			initializer_ = tag.initializer_;
 			return *this;
 		}
 
@@ -137,6 +178,7 @@ namespace webi {
 			this->attrs_ = std::move(tag.attrs_);
 			this->children = std::move(tag.children);
 			this->eventListeners_ = std::move(tag.eventListeners_);
+			this->initializer_ = std::move(initializer_);
 			return *this;
 		}
 
@@ -224,6 +266,13 @@ namespace webi {
 			init(r...);
 		}
 
+		template<typename A, typename...R>
+		auto init(const A& t, R... r) -> typename std::enable_if<std::is_base_of<AttributeSet, A>::value>::type {
+			for (auto a : t) {
+				attrs_.push_back(a);
+			}
+			init(r...);
+		}
 
 		template<typename A, typename...R>
 		auto init(A&& t, R... r) -> typename std::enable_if<std::is_base_of<Attribute, A>::value>::type {
@@ -231,15 +280,34 @@ namespace webi {
 			init(r...);
 		}
 	
+		template<typename A, typename...R>
+		auto init(A&& t, R... r) -> typename std::enable_if<std::is_base_of<AttributeSet, A>::value>::type {
+			for (auto a : t) {
+				attrs_.emplace_back(a);
+			}
+			init(r...);
+		}
+
 		template<typename E, typename...R>
 		auto init(const E& t, R... r) -> typename std::enable_if<std::is_base_of<EventListener, E>::value>::type {
 			this->eventListeners_.emplace(t.name(), t.callback());
-			attrs_.push_back(Attribute(t.name(), [this, t]() {
-				return "webi.on_action_event('" + name() + "', '" + getAttribute("type") + "', '" + t.name() + "', '" + getID() + "')";
-			}));
+			/*
+			if (t.name() == "onclick") {
+				attrs_.push_back(Attribute(t.name(), [this, t]() {
+					return "webi.on_action_event('" + name() + "', '" + getAttribute("type") + "', '" + t.name() + "', '" + getID() + "')";
+				}));
+			}
+			*/
 			init(r...);
 		}
-		
+
+		template<typename E, typename...R>
+		auto init(const E& t, R... r) -> typename std::enable_if<std::is_base_of<InitializerScript, E>::value>::type {
+			this->initializer_ = t;
+			init(r...);
+		}
+
+
 		template<typename T, typename...R>
 		Tag(const std::string& name, T t, R... r) : name_(name) {
 			init(std::forward<T>(t), r...);
@@ -263,6 +331,11 @@ namespace webi {
 		void addAttribute(const Attribute& att) {
 			attrs_.push_back(att);
 		}
+
+	public:
+		bool hasInitializerScript() const { return initializer_.available(); }
+
+		InitializerScript initializer() const { return initializer_; }
 	};
 
 	template<typename...R>

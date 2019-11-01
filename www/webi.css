@@ -31,3 +31,7 @@ body {
   color: red;
   margin: 0pt;
 }
+
+#volume1Slider .slider-selection {
+    background: #BABABA;
+}

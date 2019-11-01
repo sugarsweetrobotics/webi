@@ -4,10 +4,6 @@
 
 using namespace webi;
 
-std::string webi::WebiScript::generateWebiScript() {
-	return "function webi_on_button(e) { alert('Hello Webi'); };";
-}
-
 
 WebiToolbar::WebiToolbar() :Tag("DIV", id("webi-toolbar-box"),
 	div(id("webi-toolbar-msg"),

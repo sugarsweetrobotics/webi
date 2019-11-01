@@ -20,13 +20,18 @@ webi.on_websocket_message = function(e) {
 	}
 };
 
-webi.on_action_event = function(target, type, eventType, id) {
+webi.on_action_event = function (target, type, eventType, id, value) {
+
 	var msg = {
 		target: target,
 		type: type,
 		id: id,
 		eventType: eventType,
-	};
+    };
+
+    if (typeof (value) !== 'undefined') {
+        msg.value = value;
+    }
 	document.webSocket.send(JSON.stringify(msg));
 }
 
@@ -86,6 +91,8 @@ document.addEventListener("DOMContentLoaded", function(e) {
 		console.log(e.data);
 		webi.on_websocket_message(e);
 	    });
-	document.webSocket = webSocket;
+    document.webSocket = webSocket;
+
+    var s = $("volume1").slider().data("slider");
     });
 
