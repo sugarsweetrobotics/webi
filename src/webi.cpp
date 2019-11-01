@@ -50,7 +50,6 @@ HttpServer_ptr Webi::createHttpServer(Server_ptr ptr) {
 
 std::optional<WebiMessage> convert(const WebSocketMessage& msg) {
 	rapidjson::Document document;
-	//  std::cout << "msg.body = " << msg.body << std::endl;
 	document.Parse(msg.body.c_str());
 
 	std::string target = "";
@@ -118,7 +117,7 @@ WebSocketServer_ptr Webi::createWebSocketServer(Server_ptr ptr) {
 
 
 
-void parseEventListenerImpl(Webi* this_, std::vector<InitializerScript> &inits, const Tag& tag) {
+void parseEventListenerImpl(Webi* this_, std::vector<InitializerScript> &inits, Tag& tag) {
 	/*
 	if (tag.hasAttribute("onclick") && tag.hasAttribute("id")) {
 		auto id = tag.attribute("id");
@@ -130,11 +129,20 @@ void parseEventListenerImpl(Webi* this_, std::vector<InitializerScript> &inits, 
 	auto id = tag.attribute("id");
 	for (auto cb : tag.eventListeners()) {
 		this_->addEventListener(AnyEventListener(id, cb.name(), cb.callback()));
+		
+		if (cb.name() == "click") {
+			tag.addInitializerScript(InitializerScript("document.getElementById(\"" + id + "\").addEventListener(\""+ "click" + "\", (e)=>{" +
+			"webi.on_action_event('input', 'button', 'click', '" + id + "')" +
+			 "});"));
+		}
+		
+
 	}
 
-
 	if (tag.hasInitializerScript()) {
-		inits.push_back(tag.initializer());
+		for(auto i : tag.initializers()) {
+			inits.emplace_back(i);
+		}
 	}
 
 	for (auto c : tag.children) {
@@ -152,7 +160,7 @@ void appendInitializerImpl(const std::vector<InitializerScript> &inits, Tag& tag
 		tag.children.push_back(
 			script(scriptType("text/javascript"),
 
-				text("$(document).ready(function() {" +
+				text("document.addEventListener(\"DOMContentLoaded\", function() {" +
 					ss.str() +
 					"});"
 				)

@@ -48,7 +48,7 @@ int main(void) {
 		bs::modalFooter(
 			bs::button("Cancel", bs::modalDismiss(), id("modal-close-button"),
 				onclick([](auto e) {
-		std::cout << "Modal Close Button is Clicked" << std::endl;
+		std::cout << "Modal CancelButton is Clicked" << std::endl;
 				})
 				),
 			bs::button("OK", id("modal-ok-button"), bs::modalClose("my-modal"),
@@ -63,7 +63,7 @@ int main(void) {
 			link(rel("stylesheet"), href("webi.css")),
 			WebiScript(),
 			bs::ViewPortTag(),
-			bs::CSSfromCDN()
+			bs::CSS()
 		),
 		body(
 			modal, /// modal must be inclided in HTML.
@@ -104,7 +104,7 @@ int main(void) {
 		std::cout << "onSlide Volume 1 (" << e.value << ")" << std::endl;
 	})),
 
-			bs::ScriptsfromCDN()
+			bs::Scripts()
 		)
 	);
 

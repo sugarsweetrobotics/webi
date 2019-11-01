@@ -46,11 +46,11 @@ int main(void) {
 				p(text("Up button ->"), gridStyle.gridStyle(0, 0), style("color:red;")),
 				textBox("TextBox1", id("text_01"), gridStyle.gridStyle(1, 0)),
 				button("Up", id("button_up"), gridStyle.gridStyle(2, 0),
-					EventListener("onclick", on_up_button_clicked)),
+					onclick(on_up_button_clicked)),
 				p(text("Down button ->"), gridStyle.gridStyle(0, 1), style("color:blue;")),
 				textBox("TextBox2", id("text_02"), gridStyle.gridStyle(1, 1)),
 				button("Down", id("button_down"), gridStyle.gridStyle(2, 1),
-					EventListener("onclick", on_down_button_clicked))
+					onclick(on_down_button_clicked))
 			)
 		)
 	)

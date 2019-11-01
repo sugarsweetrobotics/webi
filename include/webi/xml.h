@@ -115,6 +115,8 @@ namespace webi {
 		}
 	};
 
+	using InitializerScriptSet = std::vector<InitializerScript>;
+
 	class Server;
 
 	class Tag;
@@ -123,7 +125,7 @@ namespace webi {
 
 	class Tag {
 	protected:
-		InitializerScript initializer_;
+		InitializerScriptSet initializers_;
 		std::map<std::string, EventCallback> eventListeners_;
 	protected:
 		std::string name_;
@@ -141,7 +143,7 @@ namespace webi {
 		}
 
 	public:
-		Tag(const Tag& tag) : name_(tag.name_), value_(tag.value_), initializer_(tag.initializer_) {
+		Tag(const Tag& tag) : name_(tag.name_), value_(tag.value_), initializers_(tag.initializers_) {
 			for (auto a : tag.attrs_)
 				attrs_.push_back(a);
 			for (auto t : tag.children)
@@ -154,7 +156,7 @@ namespace webi {
 
 		Tag(Tag&& tag) : name_(std::move(tag.name_)), value_(std::move(tag.value_)),
 			attrs_(std::move(tag.attrs_)),
-			children(std::move(tag.children)), eventListeners_(std::move(tag.eventListeners_)), initializer_(tag.initializer_) {
+			children(std::move(tag.children)), eventListeners_(std::move(tag.eventListeners_)), initializers_(tag.initializers_) {
 		}
 
 		Tag& operator=(const Tag& tag) {
@@ -168,7 +170,7 @@ namespace webi {
 			for (auto p : tag.eventListeners_) {
 				eventListeners_[p.first] = p.second;
 			}
-			initializer_ = tag.initializer_;
+			initializers_ = tag.initializers_;
 			return *this;
 		}
 
@@ -178,7 +180,7 @@ namespace webi {
 			this->attrs_ = std::move(tag.attrs_);
 			this->children = std::move(tag.children);
 			this->eventListeners_ = std::move(tag.eventListeners_);
-			this->initializer_ = std::move(initializer_);
+			this->initializers_ = std::move(initializers_);
 			return *this;
 		}
 
@@ -303,7 +305,7 @@ namespace webi {
 
 		template<typename E, typename...R>
 		auto init(const E& t, R... r) -> typename std::enable_if<std::is_base_of<InitializerScript, E>::value>::type {
-			this->initializer_ = t;
+			this->initializers_.push_back(t);
 			init(r...);
 		}
 
@@ -333,9 +335,22 @@ namespace webi {
 		}
 
 	public:
-		bool hasInitializerScript() const { return initializer_.available(); }
+		void addInitializerScript(InitializerScript&& i) {
+			initializers_.emplace_back(i);
+		}
 
-		InitializerScript initializer() const { return initializer_; }
+		void addInitializerScript(const InitializerScript& i) {
+			initializers_.push_back(i);
+		}
+
+	public:
+		bool hasInitializerScript() const { 
+			return initializers_.size() > 0;
+		}
+
+		const InitializerScriptSet& initializers() const { 
+			return initializers_; 
+		}
 	};
 
 	template<typename...R>

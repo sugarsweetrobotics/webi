@@ -163,7 +163,7 @@ namespace webi {
 				Attribute("type", "button"), className("btn"),
 				text(caption), 
 				_id,
-				Attribute("onclick", "webi.on_action_event('input', 'button', 'onclick', '" + _id.getValue() + "')"),
+				//Attribute("onclick", "webi.on_action_event('input', 'button', 'onclick', '" + _id.getValue() + "')"),
 				r...);
 		}
 

@@ -129,7 +129,7 @@ namespace webi {
 	template<typename...R>
 	Tag button(const std::string& caption, const Attribute& _id, R...r) {
 		return input(caption, "button", _id, 
-			Attribute("onclick", "webi.on_action_event('input', 'button', 'onclick', '" + _id.getValue()+ "')"),
+			//Attribute("onclick", "webi.on_action_event('input', 'button', 'onclick', '" + _id.getValue()+ "')"),
 			r...);
 	}
 
@@ -139,7 +139,7 @@ namespace webi {
 	}
 
 	inline EventListener onclick(EventCallback cb) {
-		return event("onclick", cb);
+		return event("click", cb);
 	}
 
 	/**
