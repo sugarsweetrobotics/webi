@@ -251,8 +251,8 @@ namespace webi {
 		}
 
 		template<typename...R>
-		Tag::Tag(const std::string& name, Attribute&& att, R... r) : name_(name) {
-			init(std::forward(att), r...);
+		Tag(const std::string& name, Attribute&& att, R... r) : name_(name) {
+		  init(std::forward<Attribute>(att), r...);
 		}
 
 		virtual ~Tag();

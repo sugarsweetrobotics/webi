@@ -184,7 +184,7 @@ namespace webi {
 		class ModalTitle : public Tag {
 		public:
 			template<typename... R>
-			ModalTitle(const std::string& title, R...r) : Tag("h5", className("modal-title"), Text(title), r...) {}
+			ModalTitle(const std::string& title, R...r) : Tag("h5", className("modal-title"), text(title), r...) {}
 		};
 
 		class ModalBody : public Tag {

@@ -61,7 +61,7 @@ namespace webi {
 			return set("innerHTML", html);
 		}
 
-		const RemoteElement& RemoteElement::getValue(std::function<void(const ElementResponse& response)> callback) const {
+		const RemoteElement& getValue(std::function<void(const ElementResponse& response)> callback) const {
 			return get("value", callback);
 		}
 	};
