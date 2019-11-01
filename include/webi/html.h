@@ -30,6 +30,30 @@ namespace webi {
 		return Attribute("style", value);
 	}
 
+	template<typename... R>
+	Tag script(R...r) {
+		return Tag("SCRIPT", r...);
+	}
+
+	inline Attribute src(const std::string& value) {
+		return Attribute("src", value);
+	}
+
+	template<typename...R>
+	Tag link(R...r) {
+		return Tag("link", r...);
+	}
+
+	inline Attribute rel(const std::string& value) {
+		return Attribute("rel", value);
+	}
+
+
+	inline Attribute scriptType(const std::string& type) {
+		return Attribute("type", type);
+	}
+
+
 	template<typename T, typename...R>
 	Tag h1(const T& t, R... r) {
 		return Tag("H1", t, r...);
@@ -104,7 +128,9 @@ namespace webi {
 
 	template<typename...R>
 	Tag button(const std::string& caption, const Attribute& _id, R...r) {
-		return input(caption, "button", _id, r...);
+		return input(caption, "button", _id, 
+			Attribute("onclick", "webi.on_action_event('input', 'button', 'onclick', '" + _id.getValue()+ "')"),
+			r...);
 	}
 
 	template<typename...R>
@@ -112,17 +138,16 @@ namespace webi {
 		return input(caption, "text", id, r...);
 	}
 
+	inline EventListener onclick(EventCallback cb) {
+		return event("onclick", cb);
+	}
+
 	/**
 	 *
 	 */
-	class WebiScript : public Tag {
-	public:
-		WebiScript() : Tag("SCRIPT", { Attribute("type", "text/javascript"),
-			Attribute("src", "webi.js") }) {}
-		virtual ~WebiScript() {}
-
-		static std::string generateWebiScript();
-	};
+	inline Tag WebiScript() {
+		return script(scriptType("text/javascript"), src("webi.js"));
+	}
 
 
 	class WebiToolbar : public Tag {

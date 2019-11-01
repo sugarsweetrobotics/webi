@@ -34,6 +34,8 @@ namespace webi {
     std::string target;
     std::string type;
     EventCallback callback;
+
+	  AnyEventListener(const std::string& tgt, const std::string& typ, const EventCallback& cb) : target(tgt), type(typ), callback(cb) {}
   };
 
   class Document;
@@ -41,6 +43,11 @@ namespace webi {
   class Webi {
   private:
     std::vector<AnyEventListener> eventListeners_;
+  public:
+	  void addEventListener(const AnyEventListener& el) {
+		  eventListeners_.push_back(el);
+	  }
+
   public:
     Webi();
     virtual ~Webi();
@@ -57,11 +64,7 @@ namespace webi {
     HttpServer_ptr createHttpServerImpl();
 
   public:
-    void parse(const Tag& tag);
-
-  private:
-    void parseImpl(const Tag& tag);
-    
+    void parseEventListener(Tag& tag);
 
   public:
   };
