@@ -3,6 +3,7 @@
 #include "webi/html.h"
 
 using namespace webi;
+using namespace webi::html;
 
 
 WebiToolbar::WebiToolbar() :Tag("DIV", id("webi-toolbar-box"),

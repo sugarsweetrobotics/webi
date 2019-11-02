@@ -2,8 +2,10 @@
 
 #include "webi/server.h"
 #include "webi/webi.h"
+#include "webi_impl.h"
 
 using namespace webi;
+using namespace webi::html;
 
 struct ElementCommand {
 	const std::string id;
@@ -149,7 +151,7 @@ public:
 
 };
 
-Server_ptr Webi::createServer() {
+Server_ptr WebiImpl::createServer() {
 	auto svr = std::make_shared<ServerImpl>();
 	svr->setHttpServer(createHttpServer(svr));
 	svr->setWebSocketServer(createWebSocketServer(svr));

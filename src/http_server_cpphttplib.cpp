@@ -6,6 +6,7 @@
 
 
 #include "webi/webi.h"
+#include "webi_impl.h"
 
 using namespace webi;
 
@@ -138,7 +139,7 @@ void HttpServerImpl::terminateBackground() {
   
 }
 
-HttpServer_ptr Webi::createHttpServerImpl() {
+HttpServer_ptr WebiImpl::createHttpServerImpl() {
   return std::make_shared<HttpServerImpl>();
 }
 

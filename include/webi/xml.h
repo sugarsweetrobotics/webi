@@ -8,7 +8,7 @@
 #include <functional>
 #include "webi/webi_common.h"
 
-namespace webi {
+namespace webi::xml {
 
 	struct ActionEvent {
 		std::string target_id;

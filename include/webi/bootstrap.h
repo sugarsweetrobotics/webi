@@ -15,258 +15,260 @@ namespace webi {
 
 	namespace bootstrap {
 
-		inline Tag ViewPortTag() {
+	
+		inline webi::html::Tag ViewPortTag() {
 			return group(
-				Tag("meta", Attribute("charset", "utf-8")),
-				Tag("meta", { Attribute("name", "viewport"), Attribute("content", "width=device-width, initial-scale=1, shrink-to-fit=no") })
+				webi::html::Tag("meta", webi::html::Attribute("charset", "utf-8")),
+				webi::html::Tag("meta", { webi::html::Attribute("name", "viewport"), 
+				webi::html::Attribute("content", "width=device-width, initial-scale=1, shrink-to-fit=no") })
 			);
 		}
 
-		inline Tag CSSfromCDN() {
-			return group(
-				link(rel("stylesheet"),
-					href("https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"),
-					Attribute("integrity", "sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"),
-					Attribute("crossorigin", "anonymous")),
-				link(rel("stylesheet"),
-					href("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.2/css/bootstrap-slider.css"),
-					Attribute("integrity", "sha384-FJdXLlAY9riDg/a7UYHICzoCBmHSGaCIB8tsRSryjMcg+BfyuZlyWvRlx8m6Ntfh"),
-					Attribute("crossorigin", "anonymous"))
+		inline webi::html::Tag CSSfromCDN() {
+			return webi::xml::group(
+				webi::html::link(webi::html::rel("stylesheet"),
+					webi::html::href("https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"),
+					webi::html::Attribute("integrity", "sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"),
+					webi::html::Attribute("crossorigin", "anonymous")),
+				webi::html::link(webi::html::rel("stylesheet"),
+					webi::html::href("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.2/css/bootstrap-slider.css"),
+					webi::html::Attribute("integrity", "sha384-FJdXLlAY9riDg/a7UYHICzoCBmHSGaCIB8tsRSryjMcg+BfyuZlyWvRlx8m6Ntfh"),
+					webi::html::Attribute("crossorigin", "anonymous"))
 			);
 		}
 
-		inline Tag CSS() {
-			return group(
-				link(rel("stylesheet"),
-					href("bootstrap-4.3.1/css/bootstrap.min.css")),
-				link(rel("stylesheet"),
-					href("bootstrap-slider-10.6.2/css/bootstrap-slider.css"))
+		inline webi::html::Tag CSS() {
+			return webi::xml::group(
+				webi::html::link(webi::html::rel("stylesheet"),
+					webi::html::href("bootstrap-4.3.1/css/bootstrap.min.css")),
+				webi::html::link(webi::html::rel("stylesheet"),
+					webi::html::href("bootstrap-slider-10.6.2/css/bootstrap-slider.css"))
 				);
 		}
 
-		inline Tag ScriptsfromCDN() {
-			return group(
-				script(src("https://code.jquery.com/jquery-3.3.1.slim.min.js"),
-					Attribute("integrity", "sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"),
-					Attribute("crossorigin", "anonymous")),
-				script(src("https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"),
-					Attribute("integrity", "sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"),
-					Attribute("crossorigin", "anonymous")),
-				script(src("https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"),
-					Attribute("integrity", "sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"),
-					Attribute("crossorigin", "anonymous")),
-				script(src("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.2/bootstrap-slider.min.js"),
-					Attribute("integrity", "sha384-GeRVXaaRfDlGPnvQ2jvqMPvvcWsUQ5il0aXJ4g5b0jXB18yOrR6MEVxVOJKHch4j"),
-					Attribute("crossorigin", "anonymous")));
+		inline webi::html::Tag ScriptsfromCDN() {
+			return webi::xml::group(
+				webi::html::script(webi::html::src("https://code.jquery.com/jquery-3.3.1.slim.min.js"),
+					webi::html::Attribute("integrity", "sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"),
+					webi::html::Attribute("crossorigin", "anonymous")),
+				webi::html::script(webi::html::src("https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"),
+					webi::html::Attribute("integrity", "sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"),
+					webi::html::Attribute("crossorigin", "anonymous")),
+				webi::html::script(webi::html::src("https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"),
+					webi::html::Attribute("integrity", "sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"),
+					webi::html::Attribute("crossorigin", "anonymous")),
+				webi::html::script(webi::html::src("https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.6.2/bootstrap-slider.min.js"),
+					webi::html::Attribute("integrity", "sha384-GeRVXaaRfDlGPnvQ2jvqMPvvcWsUQ5il0aXJ4g5b0jXB18yOrR6MEVxVOJKHch4j"),
+					webi::html::Attribute("crossorigin", "anonymous")));
 			}
 
 
-		inline Tag Scripts() {
-			return group(
-				script(src("jquery-3.3.1/jquery.slim.min.js")),
-				script(src("popper.js-1.14.7/umd/popper.min.js")),
-				script(src("bootstrap-4.3.1/js/bootstrap.min.js")),
-				script(src("bootstrap-slider-10.6.2/bootstrap-slider.min.js"))
+		inline webi::html::Tag Scripts() {
+			return xml::group(
+				html::script(html::src("jquery-3.3.1/jquery.slim.min.js")),
+				html::script(html::src("popper.js-1.14.7/umd/popper.min.js")),
+				html::script(html::src("bootstrap-4.3.1/js/bootstrap.min.js")),
+				html::script(html::src("bootstrap-slider-10.6.2/bootstrap-slider.min.js"))
 			);
 		}
 
 		template<typename...R>
-		Tag container(R...r) {
-			return div(className("container"), r...);
+		webi::html::Tag container(R...r) {
+			return html::div(html::className("container"), r...);
 		}
 
 		template<typename...R>
-		Tag gridRow(R...r) {
-			return div(className("row"), r...);
+		webi::html::Tag gridRow(R...r) {
+			return html::div(html::className("row"), r...);
 		}
 
 		template<typename...R>
-		Tag gridColumn(R...r) {
-			return div(className("col-sm"), r...);
+		webi::html::Tag gridColumn(R...r) {
+			return html::div(html::className("col-sm"), r...);
 		}
 
 		template<typename...R>
-		Tag nav(R...r) {
-			return Tag("nav", { className("navbar navbar-expand-lg"), className("navbar-light"), className("bg-light") }, r...);
+		webi::html::Tag nav(R...r) {
+			return html::Tag("nav", { html::className("navbar navbar-expand-lg"), html::className("navbar-light"), html::className("bg-light") }, r...);
 		}
 
-		inline Tag navToggleButton() {
-			return Tag("button", { className("navbar-toggler"),
-				Attribute("type", "button"), Attribute("data-toggle", "collapse"),
-				Attribute("data-target", "#navbarSupportedContent"), Attribute("aria-controls", "navbarSupportedContent"),
-				Attribute("aria-expanded", "false"), Attribute("aria-label", "Toggle navigation") },
-				Tag("span", className("navbar-toggler-icon"))
+		inline html::Tag navToggleButton() {
+			return html::Tag("button", { html::className("navbar-toggler"),
+				html::Attribute("type", "button"), html::Attribute("data-toggle", "collapse"),
+				html::Attribute("data-target", "#navbarSupportedContent"), html::Attribute("aria-controls", "navbarSupportedContent"),
+				html::Attribute("aria-expanded", "false"), html::Attribute("aria-label", "Toggle navigation") },
+				html::Tag("span", html::className("navbar-toggler-icon"))
 			);
 		}
 
 		template<typename...R>
-		inline Tag navBarBrand(const std::string& title, R... r) {
-			return Tag("a", { className("navbar-brand") }, text(title), r...);
+		inline webi::html::Tag navBarBrand(const std::string& title, R... r) {
+			return webi::html::Tag("a", { html::className("navbar-brand") }, html::text(title), r...);
 		}
 
 		template<typename...R>
-		Tag navBar(R... r) {
-			return div(className("collapse navbar-collapse"),
-				id("navbarSupportedContent"),
-				Tag("ul", { className("navbar-nav mr-auto") }, r...));
+		webi::html::Tag navBar(R... r) {
+			return html::div(html::className("collapse navbar-collapse"),
+				html::id("navbarSupportedContent"),
+				webi::html::Tag("ul", { html::className("navbar-nav mr-auto") }, r...));
 		}
 
 		template<typename...R>
-		Tag navItem(R... r) {
-			return Tag("li", { className("nav-item") }, r...);
+		webi::html::Tag navItem(R... r) {
+			return html::Tag("li", { html::className("nav-item") }, r...);
 		}
 
 		template<typename...R>
-		Tag navLink(const std::string& title, R...r) {
-			return Tag("a", { className("nav-link") }, text(title), r...);
+		webi::html::Tag navLink(const std::string& title, R...r) {
+			return webi::html::Tag("a", { html::className("nav-link") }, html::text(title), r...);
 		}
 
 		template<typename...R>
-		Tag navDropdown(const std::string& caption, R...r) {
-			return Tag("li", { className("nav-item", "dropdown") },
-				Tag("a", { className("nav-link", "dropdown-toggle"), Attribute("role", "button"), Attribute("data-toggle", "dropdown"), Attribute("aria-haspopup", "true"), Attribute("aria-expanded", "false"), href("#") },
-					text(caption)),
-				div(className("dropdown-menu"), Attribute("aria-labelledby", "navbarDropdown"), r...));
+		webi::html::Tag navDropdown(const std::string& caption, R...r) {
+			return webi::html::Tag("li", { html::className("nav-item", "dropdown") },
+				webi::html::Tag("a", { html::className("nav-link", "dropdown-toggle"), html::Attribute("role", "button"), 
+				html::Attribute("data-toggle", "dropdown"), html::Attribute("aria-haspopup", "true"), html::Attribute("aria-expanded", "false"), html::href("#") },
+					html::text(caption)),
+				html::div(html::className("dropdown-menu"), html::Attribute("aria-labelledby", "navbarDropdown"), r...));
 		}
 		
 		template<typename...R>
-		Tag navDropdownItem(const std::string& caption, R...r) { 
-			return Tag("a", { className("dropdown-item") }, text(caption), r...);
+		webi::html::Tag navDropdownItem(const std::string& caption, R...r) { 
+			return webi::html::Tag("a", { html::className("dropdown-item") }, html::text(caption), r...);
 		}
 
-		inline Tag navDropdownDivider() {
-			return div(className("dropdown-divider"));
+		inline webi::html::Tag navDropdownDivider() {
+			return html::div(html::className("dropdown-divider"));
 		}
 
-		class Button : public Tag {
+		class Button : public webi::html::Tag {
 		public:
-			inline const static auto Primary = Attribute("class", "btn-primary");
-			inline const static auto Secondary = Attribute("class", "btn-secondary");
+			inline const static auto Primary = html::Attribute("class", "btn-primary");
+			inline const static auto Secondary = html::Attribute("class", "btn-secondary");
 
-			inline const static auto Success = Attribute("class", "btn-success");
-			inline const static auto Danger = Attribute("class", "btn-danger");
-			inline const static auto Warning = Attribute("class", "btn-warning");
-			inline const static auto Info = Attribute("class", "btn-info");
+			inline const static auto Success = html::Attribute("class", "btn-success");
+			inline const static auto Danger = html::Attribute("class", "btn-danger");
+			inline const static auto Warning = html::Attribute("class", "btn-warning");
+			inline const static auto Info = html::Attribute("class", "btn-info");
 
-			inline const static auto Light = Attribute("class", "btn-light");
-			inline const static auto Dark = Attribute("class", "btn-dark");
+			inline const static auto Light = html::Attribute("class", "btn-light");
+			inline const static auto Dark = html::Attribute("class", "btn-dark");
 
-			inline const static auto Link = Attribute("class", "btn-link");
+			inline const static auto Link = html::Attribute("class", "btn-link");
 
-			inline const static auto Small = Attribute("class", "btn-sm");
-			inline const static auto Large = Attribute("class", "btn-lg");
+			inline const static auto Small = html::Attribute("class", "btn-sm");
+			inline const static auto Large = html::Attribute("class", "btn-lg");
 		};
 
 		template<typename...R>
-		Tag button(const std::string& caption, const Attribute& _id, R...r) {
-			return Tag("button", 
-				Attribute("type", "button"), className("btn"),
-				text(caption), 
+		webi::html::Tag button(const std::string& caption, const html::Attribute& _id, R...r) {
+			return webi::html::Tag("button", 
+				html::Attribute("type", "button"), html::className("btn"),
+				html::text(caption), 
 				_id,
 				//Attribute("onclick", "webi.on_action_event('input', 'button', 'onclick', '" + _id.getValue() + "')"),
 				r...);
 		}
 
 		template<typename...R>
-		Tag card(R...r) {
-			return div(className("card"), div(className("card-body"), r...));
+		webi::html::Tag card(R...r) {
+			return html::div(html::className("card"), html::div(html::className("card-body"), r...));
 		}
 
 		template<typename...R>
-		Tag cardTitle(const std::string& title, R...r) {
-			return h5(className("card-title"), text(title),	r...);
+		webi::html::Tag cardTitle(const std::string& title, R...r) {
+			return html::h5(html::className("card-title"), html::text(title),	r...);
 		}
 
 		template<typename...R>
-		Tag cardSubtitle(const std::string& title, R...r) {
-			return h6(className("card-subtitle", "mb-2"), text(title), r...);
+		webi::html::Tag cardSubtitle(const std::string& title, R...r) {
+			return html::h6(html::className("card-subtitle", "mb-2"), html::text(title), r...);
 		}
 
 		template<typename...R>
-		Tag cardText(const std::string& title, R...r) {
-			return p(className("card-text"), text(title), r...);
+		webi::html::Tag cardText(const std::string& title, R...r) {
+			return html::p(html::className("card-text"), html::text(title), r...);
 		}
 
 		template<typename... R>
-		Tag modal(const Attribute& id_, R...r) {
-			return div(className("modal", "fade"), id_,
-				Attribute("tabindex", "-1"),
-				Attribute("role", "dialog"),
-				Attribute("aria-labelledby", "exampleModalLongTitle"),
-				Attribute("aria-hidden", "true"),
-					div(className("modal-dialog"), 
-						Attribute("role", "document"),
-					div(className("modal-content"), r...))
+		webi::html::Tag modal(const html::Attribute& id_, R...r) {
+			return html::div(html::className("modal", "fade"), id_,
+				html::Attribute("tabindex", "-1"),
+				html::Attribute("role", "dialog"),
+				html::Attribute("aria-labelledby", "exampleModalLongTitle"),
+				html::Attribute("aria-hidden", "true"),
+					html::div(html::className("modal-dialog"), 
+						html::Attribute("role", "document"),
+					html::div(html::className("modal-content"), r...))
 			);
 		}
 
 		template<typename... R>
-		Tag modalHeader(R...r) {
-			return div(className("modal-header"), r...);
+		webi::html::Tag modalHeader(R...r) {
+			return html::div(html::className("modal-header"), r...);
 		}
 
 		template<typename... R>
-		Tag modalFooter(R...r) {
-			return div(className("modal-footer"), r...);
+		webi::html::Tag modalFooter(R...r) {
+			return html::div(html::className("modal-footer"), r...);
 		}
 
 
 		template<typename... R>
-		Tag modalTitle(const std::string& title, R...r) {
-			return h5(className("modal-title"), text(title), r...);
+		webi::html::Tag modalTitle(const std::string& title, R...r) {
+			return html::h5(html::className("modal-title"), html::text(title), r...);
 		}
 
 		template<typename... R>
-		Tag modalBody(R...r) {
-			return div(className("modal-body"), r...);
+		webi::html::Tag modalBody(R...r) {
+			return html::div(html::className("modal-body"), r...);
 		}
 
-		inline AttributeSet modalToggle(const std::string& targetId) {
-			return AttributeSet({ Attribute("data-toggle", "modal"),
-				Attribute("data-target", "#"+targetId) });
+		inline xml::AttributeSet modalToggle(const std::string& targetId) {
+			return xml::AttributeSet({ html::Attribute("data-toggle", "modal"),
+				html::Attribute("data-target", "#"+targetId) });
 		}
 
-		inline AttributeSet modalOpen(const std::string& targetId) {
-			return AttributeSet({ Attribute("data-toggle", "modal"),
-				Attribute("data-target", "#" + targetId) });
+		inline xml::AttributeSet modalOpen(const std::string& targetId) {
+			return xml::AttributeSet({ html::Attribute("data-toggle", "modal"),
+				html::Attribute("data-target", "#" + targetId) });
 		}
 
-		inline AttributeSet modalClose(const std::string& targetId) {
-			return AttributeSet({ Attribute("data-toggle", "modal"),
-				Attribute("data-target", "#" + targetId) });
+		inline xml::AttributeSet modalClose(const std::string& targetId) {
+			return xml::AttributeSet({ html::Attribute("data-toggle", "modal"),
+				html::Attribute("data-target", "#" + targetId) });
 		}
 
-
-		inline Attribute modalDismiss() {
-			return Attribute("data-dismiss", "modal");
+		inline html::Attribute modalDismiss() {
+			return html::Attribute("data-dismiss", "modal");
 		}
 
 		template<typename...R>
-		inline Tag modalCloseButton(R...r) {
-			return  Tag("button", Attribute("type", "button"), className("close"), Attribute("data-dismiss", "modal"),
-				Attribute("aria-label", "Close"),
-				Tag("span", Attribute("aria-hidden", "true"), text("&times;")),
+		inline webi::html::Tag modalCloseButton(R...r) {
+			return  webi::html::Tag("button", html::Attribute("type", "button"), html::className("close"), html::Attribute("data-dismiss", "modal"),
+				html::Attribute("aria-label", "Close"),
+				webi::html::Tag("span", html::Attribute("aria-hidden", "true"), html::text("&times;")),
 				r...);
 		}
 
 		///---------------------- Slider ----------------------
 
 		template<typename...R>
-		Tag slider(const std::string& idStr, int min, int max, int step, int value, R...r) {
-			return Tag("input", id(idStr), 
-				Attribute("type", "text"),
-				Attribute("data-slider-id", idStr + "Slider"),
-				Attribute("data-slider-min", std::to_string(min)),
-				Attribute("data-slider-max", std::to_string(max)),
-				Attribute("data-slider-step", std::to_string(step)),
-				Attribute("data-slider-value", std::to_string(value)),
-				InitializerScript("$(\"#" + idStr + "\").slider().on(\"slide\", (e)=>{webi.on_action_event(\"slider\", \"text\", \"slide\", \"" + idStr + "\", e.value);});"),
+		webi::html::Tag slider(const std::string& idStr, int min, int max, int step, int value, R...r) {
+			return webi::html::Tag("input", html::id(idStr), 
+				html::Attribute("type", "text"),
+				html::Attribute("data-slider-id", idStr + "Slider"),
+				html::Attribute("data-slider-min", std::to_string(min)),
+				html::Attribute("data-slider-max", std::to_string(max)),
+				html::Attribute("data-slider-step", std::to_string(step)),
+				html::Attribute("data-slider-value", std::to_string(value)),
+				html::InitializerScript("$(\"#" + idStr + "\").slider().on(\"slide\", (e)=>{webi.on_action_event(\"slider\", \"text\", \"slide\", \"" + idStr + "\", e.value);});"),
 				r...);
 		}
 
 
-		inline EventListener onslide(EventCallback cb) {
-			return event("slide", cb);
+		inline html::EventListener onslide(html::EventCallback cb) {
+			return html::event("slide", cb);
 		}
 
 	};

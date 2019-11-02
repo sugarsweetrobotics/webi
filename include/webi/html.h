@@ -6,7 +6,25 @@
 #include "xml.h"
 
 
-namespace webi {
+namespace webi::html {
+
+	using Attribute = xml::Attribute;
+
+	using EventListener = xml::EventListener;
+
+	using EventCallback = xml::EventCallback;
+
+	using InitializerScript = xml::InitializerScript;
+
+	using ActionEvent = xml::ActionEvent;
+
+	using Tag = xml::Tag;
+
+	inline auto event = xml::event;
+
+	inline auto text = xml::text;
+
+	
 
 	inline Attribute id(const std::string& value) {
 		return Attribute("id", value);
@@ -96,7 +114,7 @@ namespace webi {
 	};
 
 	template<typename...R>
-	Tag html(R... r) {
+	Tag htmlDoc(R... r) {
 		return Tag("HTML", r...);
 	}
 

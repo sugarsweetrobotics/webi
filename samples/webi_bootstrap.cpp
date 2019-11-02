@@ -5,11 +5,13 @@
 
 using namespace webi;
 
+using namespace webi::html;
+
 namespace bs = webi::bootstrap;
 
 int main(void) {
+    std::cout << "webi_bootstrap" << std::endl;
 	webi::Webi webi;
-
 
 	auto s = webi.createServer();
 	//auto document = s->createDocument();
@@ -58,7 +60,7 @@ int main(void) {
 		)
 	);
 
-	auto doc = html(
+	auto doc = htmlDoc(
 		head(
 			link(rel("stylesheet"), href("webi.css")),
 			WebiScript(),
@@ -78,8 +80,8 @@ int main(void) {
 							bs::cardTitle("Card Title"),
 							bs::cardSubtitle("Card SubTitle"),
 							bs::cardText("Webi says Hello Bootstrap. The world is beutiful"),
-							bs::button("Primary Button", bs::Button::Primary, style("margin-right:5px;")),
-							bs::button("Secondary Button", bs::Button::Secondary)
+							bs::button("Primary Btn", bs::Button::Primary, style("margin-right:5px;")),
+							bs::button("Secondary Btn", bs::Button::Secondary)
 						)
 					),
 					bs::gridColumn(
@@ -87,8 +89,8 @@ int main(void) {
 							bs::cardTitle("Card Title"),
 							bs::cardSubtitle("Card SubTitle"),
 							bs::cardText("Webi says Hello Bootstrap. The world is beutiful"),
-							bs::button("Primary Button", bs::Button::Primary, style("margin-right:5px;")),
-							bs::button("Secondary Button", bs::Button::Secondary)
+							bs::button("Primary Btn", bs::Button::Primary, style("margin-right:5px;")),
+							bs::button("Secondary Btn", bs::Button::Secondary)
 						)
 					)
 				)

@@ -3,6 +3,7 @@
 #include "webi/xml.h"
 
 using namespace webi;
+using namespace webi::xml;
 
 Attribute::Attribute(const std::string& key, const std::string& value) : key_(key), value_(value) {
 }

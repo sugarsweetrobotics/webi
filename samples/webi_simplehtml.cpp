@@ -3,6 +3,7 @@
 #include "webi/webi.h"
 
 using namespace webi;
+using namespace webi::html;
 
 int main(void) {
 	webi::Webi webi;
@@ -32,7 +33,7 @@ int main(void) {
 	GridLayoutStyler gridStyle({ 150, 150, 30 }, { 40, 40 });
 
 	// Define HTML file and set endpoint and document simaltaneously for server.
-	server->get("/", html(
+	server->get("/", htmlDoc(
 		head(
 			WebiScript(), // This is needed for webi framework.
 			styleSheet("webi.css")),

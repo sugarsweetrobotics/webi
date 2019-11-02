@@ -4,10 +4,11 @@
 #include "webi_test.h"
 
 using namespace webi;
+using namespace webi::html;
+
 
 int main(void) {
   webi::Webi webi;
-
 
   auto s = webi.createServer();
   auto document = s->createDocument();
@@ -31,7 +32,7 @@ int main(void) {
 		      elem.setInnerHTML("Value is Down");
 		    }));
   
-  s->get("/", html(
+  s->get("/", htmlDoc(
 		   head(
 			  WebiScript(), 
 			  styleSheet("webi.css")),

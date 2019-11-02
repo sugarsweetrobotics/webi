@@ -6,7 +6,6 @@
 
 using namespace webi;
 
-
 GridLayoutStyler::GridLayoutStyler(const std::vector<int32_t>& column_widths, const std::vector<int32_t>& row_heights) :
   column_widths_(column_widths), row_heights_(row_heights)
 {
@@ -51,10 +50,10 @@ std::string GridLayoutStyler::containerStyleStr() const {
 }
 
 
-webi::Attribute GridLayoutStyler::containerStyle() const {
-  return Attribute("style", containerStyleStr());
+xml::Attribute GridLayoutStyler::containerStyle() const {
+  return xml::Attribute("style", containerStyleStr());
 }
 
-webi::Attribute GridLayoutStyler::gridStyle(const int32_t x, const int32_t y, const int32_t width, const int32_t height) const {
-  return Attribute("style", gridStyleStr(x, y, width, height));
+xml::Attribute GridLayoutStyler::gridStyle(const int32_t x, const int32_t y, const int32_t width, const int32_t height) const {
+  return xml::Attribute("style", gridStyleStr(x, y, width, height));
 }

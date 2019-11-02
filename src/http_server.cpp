@@ -2,6 +2,7 @@
 #include "webi/webi.h"
 
 using namespace webi;
+using namespace webi::html;
 
 void HttpServer::get(const std::string& path, Tag& tag) {
   webi_ptr_->parseEventListener(tag);

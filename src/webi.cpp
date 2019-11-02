@@ -1,10 +1,12 @@
 #include <sstream>
+#include <iostream>
 
 #include "rapidjson/document.h"
-
 #include "webi/webi.h"
+#include "webi_impl.h"
 
 using namespace webi;
+using namespace webi::html;
 
 class ClientImpl : public Client {
 
@@ -29,22 +31,23 @@ void ClientImpl::get(const std::string& path, std::function<Response(Response&)>
 }
 
 
-Webi::Webi() {
+Webi::Webi() : impl_(new WebiImpl()) {
+std::cout << "webi::webi()" << std::endl;
 
 }
 
+Webi::~Webi() { delete impl_; }
 
-Webi::~Webi() {
+WebiImpl::WebiImpl() {
+	std::cout << "webiimpl" << std::endl;
 }
 
+WebiImpl::~WebiImpl() {
+}
 
-
-
-
-HttpServer_ptr Webi::createHttpServer(Server_ptr ptr) {
+HttpServer_ptr WebiImpl::createHttpServer(Server_ptr ptr) {
 	auto s = createHttpServerImpl();
 	s->setWebi(this);
-
 	return s;
 }
 
@@ -85,7 +88,7 @@ std::optional<WebiMessage> convert(const WebSocketMessage& msg) {
 	return WebiMessage(target, type, id, eventType, body, value);
 }
 
-WebSocketServer_ptr Webi::createWebSocketServer(Server_ptr ptr) {
+WebSocketServer_ptr WebiImpl::createWebSocketServer(Server_ptr ptr) {
 	auto s = createWebSocketServerImpl();
 	s->setWebi(this);
 	s->setOnOpenCallback([](const WebSocketConnectionInfo& info) {
@@ -115,28 +118,17 @@ WebSocketServer_ptr Webi::createWebSocketServer(Server_ptr ptr) {
 	return s;
 }
 
-
-
-void parseEventListenerImpl(Webi* this_, std::vector<InitializerScript> &inits, Tag& tag) {
-	/*
-	if (tag.hasAttribute("onclick") && tag.hasAttribute("id")) {
-		auto id = tag.attribute("id");
-		auto cb = tag.eventListener("onclick");
-		if (cb) {
-			this_->addEventListener(AnyEventListener(id, "onclick", cb.value()));
-		}
-	}*/
+void parseEventListenerImpl(WebiImpl* this_, std::vector<webi::html::InitializerScript> &inits, Tag& tag) {
 	auto id = tag.attribute("id");
 	for (auto cb : tag.eventListeners()) {
 		this_->addEventListener(AnyEventListener(id, cb.name(), cb.callback()));
 		
 		if (cb.name() == "click") {
-			tag.addInitializerScript(InitializerScript("document.getElementById(\"" + id + "\").addEventListener(\""+ "click" + "\", (e)=>{" +
-			"webi.on_action_event('input', 'button', 'click', '" + id + "')" +
-			 "});"));
+			auto o = js::Document().getElementById(id).addEventListener(cb.name(), 
+				js::lambda("e").define( js::Webi().on_action_event("input", "button", cb.name(), id) )
+			);
+			tag.addInitializerScript(InitializerScript(o.expression()));
 		}
-		
-
 	}
 
 	if (tag.hasInitializerScript()) {
@@ -150,7 +142,6 @@ void parseEventListenerImpl(Webi* this_, std::vector<InitializerScript> &inits, 
 	}
 }
 
-
 void appendInitializerImpl(const std::vector<InitializerScript> &inits, Tag& tag) {
 	std::stringstream ss;
 	for (auto i : inits) {
@@ -159,7 +150,6 @@ void appendInitializerImpl(const std::vector<InitializerScript> &inits, Tag& tag
 	if (tag.name() == "BODY") {
 		tag.children.push_back(
 			script(scriptType("text/javascript"),
-
 				text("document.addEventListener(\"DOMContentLoaded\", function() {" +
 					ss.str() +
 					"});"
@@ -175,7 +165,7 @@ void appendInitializerImpl(const std::vector<InitializerScript> &inits, Tag& tag
 }
 
 
-void Webi::parseEventListener(Tag& tag) {
+void WebiImpl::parseEventListener(Tag& tag) {
 	std::vector<InitializerScript> initializers;
 	parseEventListenerImpl(this, initializers, tag);
 	appendInitializerImpl(initializers, tag);

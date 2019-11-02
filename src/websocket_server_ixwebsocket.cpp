@@ -4,9 +4,9 @@
 
 #include <ixwebsocket/IXWebSocketServer.h>
 
+#include "webi_impl.h"
+
 using namespace webi;
-
-
 
 class WebSocketServerImpl : public WebSocketServer {
 public:
@@ -171,6 +171,6 @@ void WebSocketServerImpl::send(const std::string& msg) {
   
 }
 
-WebSocketServer_ptr Webi::createWebSocketServerImpl() {
+WebSocketServer_ptr WebiImpl::createWebSocketServerImpl() {
   return std::make_shared<WebSocketServerImpl>();
 }

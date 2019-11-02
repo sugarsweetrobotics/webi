@@ -42,9 +42,9 @@ namespace webi {
 
 		virtual void response(const std::string& path, const std::string& method, const std::string& contentType, std::function<webi::Response(const webi::Request&)> callback) = 0;
 
-		virtual void get(const std::string& path, Tag& tag) = 0;
+		virtual void get(const std::string& path, html::Tag& tag) = 0;
 
-		virtual void get(const std::string& path, Tag&& tag) = 0;
+		virtual void get(const std::string& path, html::Tag&& tag) = 0;
 
 		/**
 		 * Run Server on Current Thread. This function blocks until signal is raised..

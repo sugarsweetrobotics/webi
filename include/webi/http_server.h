@@ -15,7 +15,7 @@
 namespace webi {
 
   class WEBI_API HttpServer {
-  private:
+  public:
     Webi_ptr webi_ptr_;
 
     void setWebi(Webi_ptr ptr) {
@@ -44,7 +44,7 @@ namespace webi {
 
     virtual void response(const std::string& path, const std::string& method, const std::string& contentType, std::function<webi::Response(const webi::Request&)> callback) = 0;
     
-    void get(const std::string& path, Tag& tag);
+    void get(const std::string& path, html::Tag& tag);
 
     void responseHTML(const std::string& path, const std::string& method, const std::string& content) {
       response(path, method, "text/html", content);
