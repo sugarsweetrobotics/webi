@@ -1,6 +1,6 @@
 set(headers webi.h html.h css.h client.h bootstrap.h
             http_server.h remote_dom.h response.h server.h
-            webi_common.h websocket_server.h xml.h
+            webi_common.h websocket_server.h xml.h webi_object.h js.h
 )
 message("headers = ${headers}")
 

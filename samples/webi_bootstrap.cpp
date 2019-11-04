@@ -10,7 +10,7 @@ using namespace webi::html;
 namespace bs = webi::bootstrap;
 
 int main(void) {
-    std::cout << "webi_bootstrap" << std::endl;
+	std::cout << "webi_bootstrap" << std::endl;
 	webi::Webi webi;
 
 	auto s = webi.createServer();
@@ -24,19 +24,13 @@ int main(void) {
 			bs::navItem(bs::navLink("Home", href("#")), className("active")),
 			bs::navDropdown("Dropdown", href("#"),
 				bs::navDropdownItem("Action 1", href("#"), id("bs-action-01"),
-					onclick(
-						[](auto e) { std::cout << "Action 1 is clicked." << std::endl; }
-					)
+					onclick([](auto e) { std::cout << "Action 1 is clicked." << std::endl; })
 				),
 				bs::navDropdownItem("Action 2", href("#"), id("bs-action-02"),
-					onclick(
-						[](auto e) { std::cout << "Action 2 is clicked." << std::endl; }
-					)
+					onclick([](auto e) { std::cout << "Action 2 is clicked." << std::endl; })
 				),
 				bs::navDropdownItem("Action 3", href("#"), id("bs-action-03"),
-					onclick(
-						[](auto e) { std::cout << "Action 3 is clicked." << std::endl; }
-					)
+					onclick([](auto e) { std::cout << "Action 3 is clicked." << std::endl; })
 				)
 			)
 		)
@@ -45,25 +39,22 @@ int main(void) {
 	auto modal = bs::modal(id("my-modal"),
 		bs::modalHeader(bs::modalTitle("Modal Title"),
 			bs::modalCloseButton()
-			),
+		),
 		bs::modalBody(text("This is My Modal.")),
 		bs::modalFooter(
 			bs::button("Cancel", bs::modalDismiss(), id("modal-close-button"),
-				onclick([](auto e) {
-		std::cout << "Modal CancelButton is Clicked" << std::endl;
-				})
-				),
+				onclick([](auto e) {std::cout << "Modal CancelButton is Clicked" << std::endl;})
+			),
 			bs::button("OK", id("modal-ok-button"), bs::modalClose("my-modal"),
-				onclick([](auto e) {
-		std::cout << "Modal OK Button is Clicked" << std::endl;
-			}))
+				onclick([](auto e) {std::cout << "Modal OK Button is Clicked" << std::endl;})
+			)
 		)
 	);
 
 	auto doc = htmlDoc(
 		head(
 			link(rel("stylesheet"), href("webi.css")),
-			WebiScript(),
+			webi::webiScript(),
 			bs::ViewPortTag(),
 			bs::CSS()
 		),
@@ -100,18 +91,28 @@ int main(void) {
 			bs::container(
 				bs::button("Open Modal", bs::Button::Primary, bs::modalOpen("my-modal"))
 			),
-			
+
 			h2(text("Slider Example")),
-			bs::slider("volume1", 0, 100, 1, 50, bs::onslide([](auto e) {
-		std::cout << "onSlide Volume 1 (" << e.value << ")" << std::endl;
-	})),
+			bs::container(
+				bs::gridRow(
+					html::p(text("Volume 1"), style("margin-right:20px;")),
+					bs::slider("volume1", 0, 100, 1, 50, 
+						bs::onslide([](auto e) {std::cout << "onSlide Volume 1 (" << e.value << ")" << std::endl;})
+					)
+				),
+				bs::gridRow(
+					html::p(text("Volume 2"), style("margin-right:20px;")),
+					bs::slider("volume2", 0, 100, 1, 50, 
+						bs::onslide([](auto e) {std::cout << "onSlide Volume 2 (" << e.value << ")" << std::endl;})
+					)
+				)
+			),
 
 			bs::Scripts()
 		)
 	);
 
-	s->get("/", doc
-	);
+	s->get("/", doc);
 
 
 	std::cout << "Server is started." << std::endl;

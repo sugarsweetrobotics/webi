@@ -35,7 +35,7 @@ int main(void) {
 	// Define HTML file and set endpoint and document simaltaneously for server.
 	server->get("/", htmlDoc(
 		head(
-			WebiScript(), // This is needed for webi framework.
+			webi::webiScript(), // This is needed for webi framework.
 			styleSheet("webi.css")),
 		body(
 			WebiToolbar(),

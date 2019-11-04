@@ -2,17 +2,6 @@
 
 var webi = {};
 
-
-
-webi.on_button = function(button_id) {
-    var msg = {target: "input",
-	       type: "button",
-	       id: button_id,
-	       eventType: "onclick",
-    };
-    document.webSocket.send(JSON.stringify(msg));
-}
-
 webi.on_websocket_message = function(e) {
 	let obj = JSON.parse(e.data);
 	if (obj.type == "element") {
@@ -94,5 +83,5 @@ document.addEventListener("DOMContentLoaded", function(e) {
     document.webSocket = webSocket;
 
     var s = $("volume1").slider().data("slider");
-    });
+});
 

@@ -5,6 +5,8 @@
 #include "webi/webi.h"
 #include "webi_impl.h"
 
+#include "webi/js.h"
+
 using namespace webi;
 using namespace webi::html;
 
@@ -28,6 +30,36 @@ ClientImpl::~ClientImpl() {
 
 
 void ClientImpl::get(const std::string& path, std::function<Response(Response&)> f) {
+}
+
+
+webi::html::Tag webi::webiScript()
+{
+	auto spt = js::ExpressionSet({
+		js::var("webi").assign("{}"),
+		js::Object("webi").member("on_websocket_message").assign(js::lambda("e").define({
+			js::let("obj").assign(js::Object("JSON").call("parse", js::Object("e").member("data")))
+			})),
+
+		js::Document().addEventListener("DOMContentLoaded", js::lambda("e").define({
+			js::let("webSocket").assign(js::New("WebSocket()")),
+			js::Object("webSocket").addEventListener("open", js::lambda("e").define({
+				js::console_log("WebSocket Connection Open Success"),
+				js::Object("webSocket").call("set_toolbar_status", js::Object("true"))
+				})),
+			js::Object("webSocket").addEventListener("close", js::lambda("e").define({
+				js::console_log("WebSocket Connection Close Success"),
+				js::Object("webSocket").call("set_toolbar_status", js::Object("false"))
+				})),
+			js::Object("webSocket").addEventListener("message", js::lambda("e").define({
+				js::console_log("WebSocket Connection Close Success"),
+				js::Object("webi").call("on_websocket_message", js::Object("e"))
+				}))
+		}))
+		});
+	std::cout << "script: " << webi::js::expression(spt) << std::endl;
+	//return script(scriptType("text/javascript"), text(webi::js::expression(spt)));
+	return script(scriptType("text/javascript"), src("webi.js"));
 }
 
 
@@ -80,9 +112,32 @@ std::optional<WebiMessage> convert(const WebSocketMessage& msg) {
 		body = document["body"].GetString();
 	}
 
-	auto value = "";
-	if (document.HasMember("value") && document["value"].IsString()) {
-		value = document["value"].GetString();
+	std::string value = "";
+	if (document.HasMember("value") /* && document["value"].IsString() */) {
+		if (document["value"].IsString()) {
+			value = document["value"].GetString();
+		}
+		else if (document["value"].IsUint()) {
+			value = std::to_string(document["value"].GetUint());
+		}
+		else if (document["value"].IsUint64()) {
+			value = std::to_string(document["value"].GetUint64());
+		}
+		else if (document["value"].IsInt()) {
+			value = std::to_string(document["value"].GetInt());
+		}
+		else if (document["value"].IsInt64()) {
+			value = std::to_string(document["value"].GetInt64());
+		}
+		else if (document["value"].IsFloat() || document["value"].IsLosslessFloat()) {
+			value = std::to_string(document["value"].GetFloat());
+		}
+		else if (document["value"].IsDouble() || document["value"].IsLosslessDouble()) {
+			value = std::to_string(document["value"].GetDouble());
+		}
+		else if (document["value"].IsBool()) {
+			value = std::to_string(document["value"].GetBool());
+		}
 	}
 
 	return WebiMessage(target, type, id, eventType, body, value);
@@ -96,7 +151,6 @@ WebSocketServer_ptr WebiImpl::createWebSocketServer(Server_ptr ptr) {
 	});
 
 	s->setOnMessageCallback([this, ptr](const WebSocketMessage& msg) {
-		//std::cout << "on_message" << std::endl;
 		auto m_ = convert(msg);
 		if (m_) {  
 

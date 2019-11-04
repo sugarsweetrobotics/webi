@@ -160,14 +160,6 @@ namespace webi::html {
 		return event("click", cb);
 	}
 
-	/**
-	 *
-	 */
-	inline Tag WebiScript() {
-		return script(scriptType("text/javascript"), src("webi.js"));
-	}
-
-
 	class WebiToolbar : public Tag {
 	public:
 		WebiToolbar();

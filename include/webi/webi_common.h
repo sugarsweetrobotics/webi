@@ -22,7 +22,7 @@
 
 namespace webi {
   
-  class Webi;
-  using Webi_ptr = Webi*;
+  class IWebi;
+  using Webi_ptr = IWebi*;
 
 };

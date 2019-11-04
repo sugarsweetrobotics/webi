@@ -1,51 +1,83 @@
 #pragma once
 
+#include <sstream>
 
-namespace webi {
-namespace js {
+namespace webi::js {
 
 	class Expression {
+	protected:
+		std::string exp_;
 	public:
+		Expression(const std::string& e) : exp_(e) {}
+		Expression(const Expression& e) : exp_(e.exp_) {}
+		Expression(Expression&& e) : exp_(std::move(e.exp_)) {}
 
+	public:
+		std::string expression() const { return exp_ + ";"; }
 	};
 
-	class Object {
+	using ExpressionSet = std::vector<Expression>;
+
+	inline std::string expression(const ExpressionSet& ee) {
+		std::stringstream ss;
+		for (auto e : ee) {
+			ss << e.expression();
+		}
+		return ss.str();
+	}
+
+	class Object;
+
+	inline Object text(const std::string& txt);
+
+	class Object : public Expression {
 	private:
-		std::string name_;
 	public:
-		Object(const std::string& name) : name_(name) {}
+		Object(const std::string& name) : Expression(name) {}
 
-		auto name() const { return name_; }
+		auto name() const { return exp_; }
 
-        auto expression() const { return name_ + ";"; }
+        auto expression() const { return exp_ + ";"; }
+
+		auto member(const std::string& name) {
+			return Object(exp_ + "." + name);
+		}
         
+		auto assign(const std::string& v) const {
+			return Expression(exp_ + "=" + v);
+		}
+
+		auto assign(const Object& o) {
+			return Expression(exp_ + "=" + o.name());
+		}
 	public:
 
 		auto concatArguments(const Object& obj) {
-			return obj.name_;
+			return obj.exp_;
 		}
 
 		template<typename...R>
 		auto concatArguments(const Object& obj, R...r) {
-			return obj.name_ + "," + concatArguments(r...);
+			return obj.exp_ + "," + concatArguments(r...);
 		}
 
 		template<typename...R>
 		auto call(const std::string& name, R...r) {
-			return Object(name_ + "." + name + "(" + concatArguments(r...) + ")");
+			return Object(exp_ + "." + name + "(" + concatArguments(r...) + ")");
+		}
+
+		auto addEventListener(const std::string& evt, const Object& func) {
+			return this->call("addEventListener", js::text(evt), func);
 		}
 	};
 
-	inline auto text(const std::string& txt) { return Object("\"" + txt + "\""); }
+	inline Object text(const std::string& txt) { return Object("\"" + txt + "\""); }
 
 	class Element : public js::Object {
 	public:
 		Element(const std::string& name) : js::Object(name) {}
 
 	public:
-		auto addEventListener(const std::string& evt, const Object& func) {
-			return this->call("addEventListener", js::text(evt), func);
-		}
 	};
 
 
@@ -56,6 +88,7 @@ namespace js {
 	public:
 		auto getElementById(const std::string& id) { return Element(this->call("getElementById", js::text(id)).name()); }
 	};
+
 
 	class Webi : public js::Object {
 	public:
@@ -81,12 +114,31 @@ namespace js {
 		auto define(const Object& definition) {
 			return Object("("+name()+")=>{" + definition.name() + "}");
 		}
+
+		auto define(const ExpressionSet& ee) {
+			return Object("(" + name() + ")=>{" + js::expression(ee) + "}");
+		}
 	};
 
 	inline auto lambda(const std::string& arg) {
 		return LambdaFunction(arg);
 	}
-}
+
+	inline auto var(const std::string& name) {
+		return Object("var " + name);
+	}
+
+	inline auto let(const std::string& name) {
+		return Object("let " + name);
+	}
+
+	inline auto New(const std::string& name) {
+		return Object("new " + name);
+	}
+
+	inline auto console_log(const std::string& name) {
+		return Expression("console.log(\"" + name + "\")");
+	}
 
 }
 

@@ -34,7 +34,7 @@ int main(void) {
   
   s->get("/", htmlDoc(
 		   head(
-			  WebiScript(), 
+			  webi::webiScript(), 
 			  styleSheet("webi.css")),
 		   body(
 			WebiToolbar(),

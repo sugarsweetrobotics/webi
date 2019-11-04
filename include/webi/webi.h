@@ -13,3 +13,11 @@
 #include "remote_dom.h"
 #include "webi_object.h"
 
+
+namespace webi {
+	/**
+	 *
+	 */
+	webi::html::Tag webiScript();
+
+}
