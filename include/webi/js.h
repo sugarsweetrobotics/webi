@@ -132,7 +132,7 @@ namespace webi::js {
 		return Object("let " + name);
 	}
 
-	inline auto New(const std::string& name) {
+	inline auto new_(const std::string& name) {
 		return Object("new " + name);
 	}
 
@@ -140,5 +140,20 @@ namespace webi::js {
 		return Expression("console.log(\"" + name + "\")");
 	}
 
+	class Conditional : public Object {
+
+	public:
+		Conditional(const std::string& name) : Object(name) {}
+
+
+	public:
+		auto does(const ExpressionSet& es) {
+			return Object("{" + js::expression(es) + "}");
+		}
+	};
+
+	inline auto if_ (const Object& obj) {
+		return Object("if(" + obj.name() + ")");
+	}
 }
 

@@ -35,6 +35,7 @@ void ClientImpl::get(const std::string& path, std::function<Response(Response&)>
 
 webi::html::Tag webi::webiScript()
 {
+	/*
 	auto spt = js::ExpressionSet({
 		js::var("webi").assign("{}"),
 		js::Object("webi").member("on_websocket_message").assign(js::lambda("e").define({
@@ -55,9 +56,19 @@ webi::html::Tag webi::webiScript()
 				js::console_log("WebSocket Connection Close Success"),
 				js::Object("webi").call("on_websocket_message", js::Object("e"))
 				}))
+		})),
+
+		js::Object("webi").member("on_message_element").assign(js::lambda("msg").define({
+			js::let("e").assign(js::Document().getElementById("msg.id")),
+			js::if_(js::Object("e")).does({
+
+				})
 		}))
+
 		});
+
 	std::cout << "script: " << webi::js::expression(spt) << std::endl;
+	*/
 	//return script(scriptType("text/javascript"), text(webi::js::expression(spt)));
 	return script(scriptType("text/javascript"), src("webi.js"));
 }
