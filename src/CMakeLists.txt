@@ -6,18 +6,18 @@ set(webi_srcs webi.cpp server.cpp http_server.cpp http_server_cpphttplib.cpp
 #set(webi_srcs webi.cpp server_lws.cpp html.cpp server_lws_wrapper.c)
 set(webi_srcs ${webi_srcs} PARENT_SCOPE)
 
-include_directories(${CMAKE_SOURCE_DIR}/include)
-include_directories(${CMAKE_SOURCE_DIR}/src/)
-include_directories(${CMAKE_SOURCE_DIR}/thirdparty/)
+include_directories(${PROJECT_SOURCE_DIR}/include)
+include_directories(${PROJECT_SOURCE_DIR}/src/)
+include_directories(${PROJECT_SOURCE_DIR}/thirdparty/)
 
 include_directories(${OPENSSL_INCLUDE_DIR})
 
-include_directories(${CMAKE_SOURCE_DIR}/thirdparty/rapidjson/include)
+include_directories(${PROJECT_SOURCE_DIR}/thirdparty/rapidjson/include)
 # include_directories(${CMAKE_SOURCE_DIR}/thirdparty/libwebsockets/include)
 # include_directories(${CMAKE_SOURCE_DIR}/thirdparty/websocketpp)
 # include_directories(${CMAKE_SOURCE_DIR}/thirdparty/websocketpp/websocketpp)
 
-include_directories(${CMAKE_SOURCE_DIR}/thirdparty/IXWebsocket)
+include_directories(${PROJECT_SOURCE_DIR}/thirdparty/IXWebsocket)
 
 find_package(Threads REQUIRED)
 

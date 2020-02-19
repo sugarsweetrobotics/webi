@@ -1,6 +1,12 @@
 
+if (TARGET Catch2)
+
+else ()
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Catch2)
-include_directories(${CMAKE_SOURCE_DIR}/include)
+endif ()
+
+
+include_directories(${PROJECT_SOURCE_DIR}/include)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/Catch2/single_include/catch2)
 
 
