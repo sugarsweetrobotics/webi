@@ -42,10 +42,14 @@ public:
 	void setWebSocketServer(WebSocketServer_ptr ptr) { websock_server_ = ptr; }
 
 public:
-	ServerImpl() {}
+  ServerImpl() : Server() {
+	  std::cout << "ServerImpl::ServerImpl()" << std::endl;
+	}
 	
 	
-	virtual ~ServerImpl() {}
+	virtual ~ServerImpl() {
+	  std::cout << "ServerImpl::~ServerImpl()" << std::endl;
+	}
 
 	virtual void baseDirectory(const std::string& path) override {
 		http_server_->baseDirectory(path);
@@ -152,8 +156,8 @@ public:
 };
 
 Server_ptr WebiImpl::createServer() {
-	auto svr = std::make_shared<ServerImpl>();
-	svr->setHttpServer(createHttpServer(svr));
-	svr->setWebSocketServer(createWebSocketServer(svr));
-	return svr;
+  auto svr = new ServerImpl();//std::make_shared<ServerImpl>();
+  svr->setHttpServer(createHttpServer(svr));
+  svr->setWebSocketServer(createWebSocketServer(svr));
+  return webi::Server_ptr(svr);
 }

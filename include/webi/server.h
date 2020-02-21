@@ -32,9 +32,13 @@ namespace webi {
 
 		friend class Webi;
 	public:
-		Server() {}
+		Server() {
+		  std::cout << "Server::Server()" << std::endl;
+		}
 
-		virtual ~Server() {}
+		virtual ~Server() {
+		  std::cout << "Server::~Server()" << std::endl;
+		}
 
 		virtual void baseDirectory(const std::string& path) = 0;
 

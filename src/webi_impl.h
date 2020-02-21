@@ -18,8 +18,8 @@ class WebiImpl : public webi::IWebi {
 
 public:
 
-    WebiImpl();
-    virtual ~WebiImpl();
+  WebiImpl() {};
+  virtual ~WebiImpl() {};
 
     std::vector<AnyEventListener> eventListeners_;
 
@@ -28,8 +28,8 @@ public:
     }
 private:
 
-    webi::HttpServer_ptr createHttpServer(webi::Server_ptr ptr);
-    webi::WebSocketServer_ptr createWebSocketServer(webi::Server_ptr ptr);
+    webi::HttpServer_ptr createHttpServer(webi::Server* ptr);
+    webi::WebSocketServer_ptr createWebSocketServer(webi::Server* ptr);
 
 private:
     webi::WebSocketServer_ptr createWebSocketServerImpl();
