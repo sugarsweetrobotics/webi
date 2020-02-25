@@ -1,9 +1,11 @@
 #include <iostream>
 
+#include <fstream>
 #include "webi/http_server.h"
 
 //#include "cpp-httplib/httplib.h"
 #include <ixwebsocket/IXHttpServer.h>
+#include <ixwebsocket/IXUserAgent.h>
 
 #include "webi/webi.h"
 #include "webi_impl.h"
@@ -91,10 +93,98 @@ void HttpServerImpl::response(const std::string& path, const std::string& method
   }
 }
 
+
+
+static std::pair<bool, std::vector<uint8_t>> load(const std::string& path)
+{
+    std::vector<uint8_t> memblock;
+
+    std::ifstream file(path);
+    if (!file.is_open()) return std::make_pair(false, memblock);
+
+    file.seekg(0, file.end);
+    std::streamoff size = file.tellg();
+    file.seekg(0, file.beg);
+
+    memblock.resize((size_t) size);
+    file.read((char*) &memblock.front(), static_cast<std::streamsize>(size));
+
+    return std::make_pair(true, memblock);
+}
+
+static std::pair<bool, std::string> readAsString(const std::string& path)
+{
+    auto res = load(path);
+    auto vec = res.second;
+    return std::make_pair(res.first, std::string(vec.begin(), vec.end()));
+}
+
+static auto defaultOnConnectionCallback = [](ix::HttpRequestPtr request,
+                   std::shared_ptr<ix::ConnectionState> /*connectionState*/) -> ix::HttpResponsePtr {
+                std::string uri(request->uri);
+                if (uri.empty() || uri == "/")
+                {
+                    uri = "/index.html";
+                }
+
+                ix::WebSocketHttpHeaders headers;
+                headers["Server"] = ix::userAgent();
+
+                std::string path("." + uri);
+                auto res = readAsString(path);
+                bool found = res.first;
+                if (!found)
+                {
+                    return std::make_shared<ix::HttpResponse>(
+                        404, "Not Found", ix::HttpErrorCode::Ok, ix::WebSocketHttpHeaders(), std::string());
+                }
+
+                std::string content = res.second;
+
+                // Log request
+                std::stringstream ss;
+                ss << request->method << " " << request->headers["User-Agent"] << " "
+                   << request->uri << " " << content.size();
+                //logInfo(ss.str());
+
+                // FIXME: check extensions to set the content type
+                // headers["Content-Type"] = "application/octet-stream";
+                headers["Accept-Ranges"] = "none";
+
+                for (auto&& it : request->headers)
+                {
+                    headers[it.first] = it.second;
+                }
+
+                return std::make_shared<ix::HttpResponse>(
+                    200, "OK", ix::HttpErrorCode::Ok, headers, content);
+            };
+
+
+
 void HttpServerImpl::runForever(const int32_t port /*=8080*/) {
   std::cout << "HttpServerImpl (IXWebSocket) runForever(" << port << ")" << std::endl;
   auto hostname = "0.0.0.0";
   server_ = new ix::HttpServer(port, hostname);
+
+  server_->setOnConnectionCallback(
+    [this](ix::HttpRequestPtr request,
+           std::shared_ptr<ix::ConnectionState> /*connectionState*/) -> ix::HttpResponsePtr
+    {
+        // Build a string for the response
+        std::stringstream ss;
+        ss << request->method
+           << " "
+           << request->uri;
+
+        std::string content = ss.str();
+
+        return std::make_shared<ix::HttpResponse>(200, "OK",
+                                              ix::HttpErrorCode::Ok,
+                                              ix::WebSocketHttpHeaders(),
+                                              content);
+});
+
   auto [result, msg] = server_->listen();
 
   if (!result) {
@@ -133,4 +223,6 @@ HttpServer_ptr WebiImpl::createHttpServerImpl() {
 }
 
 
-
+webi::HttpServer_ptr webi::server() {
+  return webi::HttpServer_ptr(new HttpServerImpl());
+}

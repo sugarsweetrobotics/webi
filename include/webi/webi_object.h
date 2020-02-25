@@ -28,7 +28,7 @@ namespace webi {
     virtual ~IWebi() {}
     
   public:
-    virtual Server_ptr createServer() = 0;
+    virtual webi::Server_ptr createServer() = 0;
     virtual void parseEventListener(html::Tag& tag) = 0;
   };
   
@@ -39,7 +39,7 @@ namespace webi {
     Webi();
     virtual ~Webi();
 
-    virtual Server_ptr createServer() { return impl_->createServer(); }
+    virtual webi::Server_ptr createServer() { return impl_->createServer(); }
 
 
   public:

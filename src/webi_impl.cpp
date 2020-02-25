@@ -74,7 +74,7 @@ webi::html::Tag webi::webiScript()
 }
 
 HttpServer_ptr WebiImpl::createHttpServer(webi::Server* ptr) {
-  std::cout << "WebiImpl::createHttpServer()" << std::endl;
+  //std::cout << "WebiImpl::createHttpServer()" << std::endl;
   auto s = createHttpServerImpl();
   s->setWebi(this);
   return s;
@@ -141,7 +141,7 @@ std::optional<WebiMessage> convert(const WebSocketMessage& msg) {
 }
 
 WebSocketServer_ptr WebiImpl::createWebSocketServer(webi::Server* ptr) {
-  std::cout << "WebiImpl::createWebSocketServer()" << std::endl;
+    //std::cout << "WebiImpl::createWebSocketServer()" << std::endl;
 	auto s = createWebSocketServerImpl();
 	s->setWebi(this);
 	s->setOnOpenCallback([](const WebSocketConnectionInfo& info) {

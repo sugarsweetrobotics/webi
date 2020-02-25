@@ -145,3 +145,7 @@ HttpServer_ptr WebiImpl::createHttpServerImpl() {
 
 
 
+
+webi::HttpServer_ptr webi::server() {
+  return webi::HttpServer_ptr(new HttpServerImpl());
+}

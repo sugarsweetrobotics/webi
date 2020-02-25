@@ -78,4 +78,5 @@ namespace webi {
   
   using HttpServer_ptr = std::shared_ptr<HttpServer>;
 
+  webi::HttpServer_ptr server();
 };

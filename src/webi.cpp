@@ -11,7 +11,7 @@ using namespace webi;
 using namespace webi::html;
 
 Webi::Webi() : impl_(new WebiImpl()) {
-  std::cout << "webi::webi()" << std::endl;
+  //std::cout << "webi::webi()" << std::endl;
 }
 
 Webi::~Webi() { delete impl_; }

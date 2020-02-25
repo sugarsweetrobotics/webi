@@ -32,13 +32,9 @@ namespace webi {
 
 		friend class Webi;
 	public:
-		Server() {
-		  std::cout << "Server::Server()" << std::endl;
-		}
+		Server() {}
 
-		virtual ~Server() {
-		  std::cout << "Server::~Server()" << std::endl;
-		}
+		virtual ~Server() {}
 
 		virtual void baseDirectory(const std::string& path) = 0;
 
@@ -85,5 +81,5 @@ namespace webi {
 
 	};
 
-	using Server_ptr = std::shared_ptr<Server>;
+	using Server_ptr = std::shared_ptr<webi::Server>;
 };
