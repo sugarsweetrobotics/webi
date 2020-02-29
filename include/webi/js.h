@@ -50,6 +50,14 @@ namespace webi::js {
 		auto assign(const Object& o) {
 			return Expression(exp_ + "=" + o.name());
 		}
+		
+		auto key(const std::string& v) const {
+			return Object(exp_ + "[" + v + "]");
+		}
+
+		auto key(const Object& v) const {
+			return Object(exp_ + "[" + v.name() + "]");
+		}
 	public:
 
 		auto concatArguments(const Object& obj) {
@@ -148,12 +156,57 @@ namespace webi::js {
 
 	public:
 		auto does(const ExpressionSet& es) {
-			return Object("{" + js::expression(es) + "}");
+			return Conditional(name() + "{" + js::expression(es) + "}");
+		}
+
+		auto elif_(const std::string& name_) {
+			return Conditional(name() + "else if(" + name_ + ")");
+		}
+
+		auto elseDoes(const ExpressionSet& es) {
+			return Conditional(name() + "else{" + js::expression(es) + "}");
 		}
 	};
 
 	inline auto if_ (const Object& obj) {
-		return Object("if(" + obj.name() + ")");
+		return Conditional("if(" + obj.name() + ")");
+	}
+
+	inline auto return_(const Object& obj) {
+		return Expression("return " + obj.name());
+	}
+
+	inline auto _o(const std::string& n) { return Object(n); }
+
+	inline auto _and(const Object& a, const Object& b) {
+		return Object(a.name() + "&&" + b.name());
+	}
+
+	inline auto equals(const Object& a, const Object& b) {
+		return Object(a.name() + "===" + b.name());
+	}
+
+	class pair : public Object {
+	private:
+	    Object value_;
+	public:
+		pair(const std::string& name, const Object& value) : Object(name), value_(value) {}
+
+		auto expression() {
+			return name() + ": " + value_.name();
+		}
+	};
+
+	using PairSet = std::vector<pair>;
+	
+	inline auto expression(const PairSet& ps) {
+		std::stringstream ss;
+		for(auto p : ps) {ss << p.expression() << ",";}
+		return ss.str();
+	}
+
+	inline auto dictionary(const PairSet& ps) {
+		return Object("{" + expression(ps) + "}");
 	}
 }
 

@@ -9,6 +9,7 @@
 
 using namespace webi;
 using namespace webi::html;
+//using namespace webi::js;
 
 class ClientImpl : public Client {
 private:
@@ -32,6 +33,33 @@ ClientImpl::~ClientImpl() {
 void ClientImpl::get(const std::string& path, std::function<Response(Response&)> f) {
 }
 
+
+namespace webi::js {
+auto spt = js::ExpressionSet({
+	var("webi").assign("{}"),
+	_o("webi").member("set_obj").assign(lambda("obj, attr, value").define({
+		if_(_o("obj")).does({
+			_o("obj").key("attr").assign(_o("value"))
+		}).expression(),
+		return_(_o("obj"))
+	})),
+	_o("webi").member("get_obj").assign(lambda("obj, attr, defaultValue").define({
+		if_(_and(_o("obj"), _o("obj[attr]"))).does({
+			return_(_o("obj").key(_o("attr")))
+		}).expression(),
+		return_(_o("defaultValue"))
+	})),
+	_o("webi").member("on_websocket_message").assign(lambda("e").define({
+		var("obj").assign(_o("JSON").call("parse", _o("e").member("data"))),
+		if_(equals(_o("obj").member("type"), text("element"))).does({_o("webi").call("on_element_message", _o("obj"))})
+	})),
+	_o("webi").member("on_action_event").assign(lambda("target, type, eventType, id, value").define(
+		{
+			var("msg").assign(dictionary({pair("target", _o("target"))}))
+		}
+	))
+});
+}
 
 webi::html::Tag webi::webiScript()
 {
@@ -69,8 +97,8 @@ webi::html::Tag webi::webiScript()
 
 	std::cout << "script: " << webi::js::expression(spt) << std::endl;
 	*/
-	//return script(scriptType("text/javascript"), text(webi::js::expression(spt)));
-	return script(scriptType("text/javascript"), src("webi.js"));
+	return script(scriptType("text/javascript"), text(webi::js::expression(webi::js::spt)));
+	//return script(scriptType("text/javascript"), src("webi.js"));
 }
 
 HttpServer_ptr WebiImpl::createHttpServer(webi::Server* ptr) {
