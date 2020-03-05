@@ -30,20 +30,4 @@ namespace webi {
       return *this;}
   };
   
-  struct Request {
-  public:
-    std::string version;
-    std::string method;
-    std::string target;
-    std::string path;
-    std::vector<Header> headers;
-    std::string body;
-    std::smatch matches;
-    void* _privateData;
-  Request(const std::string &m, const std::string &b) : method(m), body(b), _privateData(nullptr) {}
-  Request(std::string &&m, std::string &&b) : method(m), body(b), _privateData(nullptr) {}
-  Request(const std::string &m, const std::string &b, const std::smatch &ms, void* privateData=nullptr) :
-    method(m), body(b), matches(ms), _privateData(privateData) {}
-  Request(std::string &&m, std::string &&b, std::smatch&& ms) : method(m), body(b), matches(ms), _privateData(nullptr) {}
-  };
 };

@@ -9,8 +9,9 @@
 
 #include "webi/webi_common.h"
 
-#include "html.h"
-#include "response.h"
+#include "webi/html.h"
+#include "webi/response.h"
+#include "webi/request.h"
 
 namespace webi {
 

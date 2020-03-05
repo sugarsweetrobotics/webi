@@ -7,24 +7,10 @@
 
 #include "webi/webi.h"
 #include "webi_impl.h"
+#include "http_converter_cpphttplib.h"
 
 using namespace webi;
 
-
-static webi::Request convert(const httplib::Request &req)
-{
-  return webi::Request(req.method, req.body, req.matches);
-}
-
-
-static void apply(httplib::Response &response, webi::Response &&r)
-{
-  response.status = r.status;
-  response.version = r.version;
-  
-  response.set_content(r.body, r.contentType.c_str());
-    //  response.body = r.body;
-}
 
 
 class HttpServerImpl : public HttpServer{
