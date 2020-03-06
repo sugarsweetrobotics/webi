@@ -2,9 +2,23 @@
 
 namespace webi {
 
+ template<typename T, typename K, typename V>
+  std::vector<T> map(std::multimap<K, V>& map, std::function<T(const K&,V&)> func) {
+    std::vector<T> ret;
+    for(auto& [k, v] : map) {
+      ret.emplace_back(func(k, v));
+    }
+    return ret;
+  }
+
 inline webi::Request convert(const httplib::Request &req)
 {
-  return webi::Request(req.method, req.body, req.headers.find("Content-Type")->second, req.matches);
+  std::vector<webi::Header> ret;
+  for(const auto& [k, v] : req.headers) {
+    ret.push_back(Header(k, v));
+  }
+  
+  return webi::Request(req.method, req.body, ret, req.matches);
 }
 
 inline void apply(httplib::Response &response, webi::Response &&r)
@@ -16,7 +30,8 @@ inline void apply(httplib::Response &response, webi::Response &&r)
 
 inline webi::Response convert(std::shared_ptr<httplib::Response> response)
 {
-    return webi::Response(response->status, response->body, response->headers.find("Content-Type")->second);
+  //return webi::Response(response->status, response->body, (ret));
+  return webi::Response(response->status, response->body, response->headers.find("Content-Type")->second);
 }
 
 }

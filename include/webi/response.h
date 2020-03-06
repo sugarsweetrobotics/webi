@@ -3,12 +3,9 @@
 #include <string>
 #include <vector>
 #include <regex>
+#include "webi/header.h"
 
 namespace webi {
-
-	struct Header {
-
-  };
 
   struct Response {
   public:

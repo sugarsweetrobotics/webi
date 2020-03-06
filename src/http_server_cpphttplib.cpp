@@ -75,11 +75,11 @@ void HttpServerImpl::response(const std::string& path, const std::string& method
 }
 
 void HttpServerImpl::runForever(const int32_t port /*=8080*/) {
-  server_.listen("localhost", port);
+  server_.listen("0.0.0.0", port);
 }
 
 void HttpServerImpl::runBackground(const int32_t port /*=8080*/) {
-  std::string address = "localhost";
+  std::string address = "0.0.0.0";
   const double timeout = 10.0;
   auto _port = port;
   if (port == 0) {
