@@ -55,19 +55,16 @@ void HttpServerImpl::baseDirectory(const std::string& path) {
 void HttpServerImpl::response(const std::string& path, const std::string& method, const std::string& contentType, std::function<webi::Response(const webi::Request&)> callback) {
   if (method == "GET") {
     server_.Get(path.c_str(), [callback, contentType](const httplib::Request& req, httplib::Response& res) {
-	std::cout << "get response" << std::endl;
 	apply(res, callback(convert(req)));
       });
 
   } else if (method == "PUT") {
     server_.Put(path.c_str(), [callback, contentType](const httplib::Request& req, httplib::Response& res) {
-	std::cout << "put response" << std::endl;
 	apply(res, callback(convert(req)));
       });
   }
   else if (method == "POST") {
     server_.Post(path.c_str(), [callback, contentType](const httplib::Request& req, httplib::Response& res) {
-	std::cout << "post response" << std::endl;
 	apply(res, callback(convert(req)));
       });
   }
