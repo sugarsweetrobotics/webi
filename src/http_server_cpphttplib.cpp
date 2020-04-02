@@ -68,6 +68,11 @@ void HttpServerImpl::response(const std::string& path, const std::string& method
 	apply(res, callback(convert(req)));
       });
   }
+  else if (method == "DELETE") {
+    server_.Delete(path.c_str(), [callback, contentType](const httplib::Request& req, httplib::Response& res) {
+	apply(res, callback(convert(req)));
+      });
+  }
 
 }
 
@@ -125,9 +130,6 @@ void HttpServerImpl::terminateBackground() {
 HttpServer_ptr WebiImpl::createHttpServerImpl() {
   return std::make_shared<HttpServerImpl>();
 }
-
-
-
 
 webi::HttpServer_ptr webi::server() {
   return webi::HttpServer_ptr(new HttpServerImpl());
