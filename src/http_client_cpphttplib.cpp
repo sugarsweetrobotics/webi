@@ -30,6 +30,9 @@ public:
       } else if (method == "PUT") {
           auto response = client_.Put(url.c_str(),  "", "text/html");
           return convert(response);
+      } else if (method == "DELETE") {
+          auto response = client_.Delete(url.c_str(),  "", "text/html");
+          return convert(response);
       }
   }
 
