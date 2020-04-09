@@ -14,6 +14,8 @@ namespace webi {
 
     virtual ~Client() {}
 
+  public:
+    void setTimetout(uint64_t seconds);
     virtual void get(const std::string& path, std::function<Response(Response&&)> f) = 0;
   };
 };

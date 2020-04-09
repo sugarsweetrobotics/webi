@@ -48,8 +48,8 @@ HttpServerImpl::~HttpServerImpl() {
 }
 
 void HttpServerImpl::baseDirectory(const std::string& path) {
-  server_.set_base_dir(path.c_str());
-
+//  server_.set_base_dir(path.c_str());
+  server_.set_mount_point(nullptr, path.c_str());
 }
 
 void HttpServerImpl::response(const std::string& path, const std::string& method, const std::string& contentType, std::function<webi::Response(const webi::Request&)> callback) {

@@ -27,6 +27,7 @@ namespace webi {
 
   public:
     
+    virtual void setTimeout(uint64_t seconds) = 0;
     virtual Response request(const std::string& url, const std::string& method) = 0;
     virtual Response request(const std::string& url, const std::string& method, const Request& req) = 0;
   };

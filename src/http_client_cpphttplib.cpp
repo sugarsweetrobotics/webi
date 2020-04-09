@@ -18,7 +18,11 @@ public:
   }
 
   virtual ~HttpClientImpl() {}
-
+public:
+  virtual void setTimeout(uint64_t seconds) {
+      client_.set_timeout_sec(seconds);
+//    client_.set_read_timeout(0, 10000);d
+  }
 public:
   virtual Response request(const std::string& url, const std::string& method) {
       if (method == "GET") {
