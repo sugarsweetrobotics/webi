@@ -52,7 +52,7 @@ WebSocketServerImpl::~WebSocketServerImpl() {
 }
 
 void WebSocketServerImpl::runForever(const int32_t port) {
-  std::cout << "Starting Server..." << port << std::endl;
+  //std::cout << "Starting Server..." << port << std::endl;
   ix::WebSocketServer server(port);
 
 
@@ -99,7 +99,7 @@ void WebSocketServerImpl::runForever(const int32_t port) {
 }
 
 void WebSocketServerImpl::runBackground(const int32_t port) {
-  std::cout << "Starting Server..." << port << std::endl;
+  //std::cout << "Starting Server..." << port << std::endl;
   server_ = new ix::WebSocketServer(port);
 
 
@@ -143,7 +143,7 @@ void WebSocketServerImpl::runBackground(const int32_t port) {
       return ;
     }
 
-  std::cout << "Starting Connection!" << std::endl;
+  //std::cout << "Starting Connection!" << std::endl;
 
   server_->start();
 
@@ -152,7 +152,7 @@ void WebSocketServerImpl::runBackground(const int32_t port) {
 bool WebSocketServerImpl::waitBackground(const double timeout_sec) {
   server_->wait();
 
-  std::cout << "Ending..." << std::endl;
+  //std::cout << "Ending..." << std::endl;
   
   return true;
 }
