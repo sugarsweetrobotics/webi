@@ -44,7 +44,8 @@ HttpServerImpl::HttpServerImpl(HttpServerImpl&& server) {
 }
 
 HttpServerImpl::~HttpServerImpl() {
-
+  terminateBackground();
+  thread_->join();
 }
 
 void HttpServerImpl::baseDirectory(const std::string& path) {
@@ -124,7 +125,7 @@ bool HttpServerImpl::waitBackground(const double timeout_sec) {
 }
 
 void HttpServerImpl::terminateBackground() {
-  
+  server_.stop();
 }
 
 HttpServer_ptr WebiImpl::createHttpServerImpl() {
