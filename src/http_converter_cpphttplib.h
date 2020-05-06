@@ -30,8 +30,11 @@ inline void apply(httplib::Response &response, webi::Response &&r)
 
 inline webi::Response convert(std::shared_ptr<httplib::Response> response)
 {
-  //return webi::Response(response->status, response->body, (ret));
-  return webi::Response(response->status, response->body, response->headers.find("Content-Type")->second);
+  if (response) {
+    //return webi::Response(response->status, response->body, (ret));
+    return webi::Response(response->status, response->body, response->headers.find("Content-Type")->second);
+  }
+  return webi::Response(404, "", "text/html");
 }
 
 }
